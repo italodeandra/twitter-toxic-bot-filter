@@ -1,5 +1,5 @@
 import { createReducerContext } from 'react-use'
-import { NullableUser, User } from './User'
+import { NullableUser } from './User'
 import { ActionType, UserActions } from './userActions'
 
 let localStorageItem = window.localStorage.getItem('User') || 'null'

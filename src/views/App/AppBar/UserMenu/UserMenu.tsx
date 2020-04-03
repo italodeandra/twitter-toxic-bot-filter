@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, ListItemIcon, ListSubheader, Menu, MenuItem, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { removeUser } from '../../../../store/reducers/user/userActions'
@@ -16,10 +16,7 @@ const useStyles = makeStyles(() => ({
     }
 }))
 
-interface Props {
-}
-
-const UserMenu: FunctionComponent<Props> = ({}) => {
+const UserMenu = () => {
     const classes = useStyles()
     const [ anchorEl, setAnchorEl ] = useState<HTMLElement | null>(null)
     const [ user, userDispatch ] = useUser()
