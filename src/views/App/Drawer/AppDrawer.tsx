@@ -6,28 +6,31 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
+    SwipeableDrawer,
     Tooltip,
     Typography,
     useTheme
 } from '@material-ui/core'
-import React, { FunctionComponent, ReactNode, useState } from 'react'
+import React, { FunctionComponent, ReactElement, ReactNode, useState } from 'react'
 import useScrollVisible from '../../../hooks/useScrollVisible'
-import { Inbox as InboxIcon, Mail as MailIcon } from '@material-ui/icons'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { drawerWidth } from '../App'
 import clsx from 'clsx'
 import MenuButton from '../MenuButton/MenuButton'
+import { NavLink } from 'react-router-dom'
 
 export const toolbarStyles = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    [theme.breakpoints.down('xs')]: {
-        justifyContent: 'flex-start',
-    },
     padding: theme.spacing(0, 2),
     // necessary for content to be below app bar
-    ...theme.mixins.toolbar
+    ...theme.mixins.toolbar,
+    minHeight: '48px !important',
+    [theme.breakpoints.down('xs')]: {
+        justifyContent: 'flex-start',
+        minHeight: '56px !important'
+    },
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,23 +41,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     drawerPaper: {
         width: drawerWidth,
+        // backgroundColor: 'transparent',
+        // border: 'none'
     },
     drawerOpen: {
         width: drawerWidth,
-        transition: theme.transitions.create('width', {
+        transition: theme.transitions.create([ 'width', 'border', 'background-color' ], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
         overflowX: 'hidden',
     },
     drawerClose: {
-        transition: theme.transitions.create('width', {
+        transition: theme.transitions.create([ 'width', 'border', 'background-color' ], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
         overflowX: 'hidden',
         overflowY: 'hidden',
         width: theme.spacing(7) + 1,
+        border: 'none',
+        backgroundColor: 'transparent',
     },
     drawerCloseScrollable: {
         '&:hover': {
@@ -65,12 +72,27 @@ const useStyles = makeStyles((theme: Theme) => ({
         }
     },
     drawerToolbarDivider: {
-        marginTop: -1
+        marginBottom: -1
+    },
+    drawerSignedOut: {
+        width: '0 !important'
+    },
+    menu: {
+        '&.active': {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            fontWeight: theme.typography.fontWeightMedium,
+        }
+    },
+    menuIcon: {
+        color: 'inherit'
     },
 
     toolbar: {
-        ...toolbarStyles(theme)
-    }
+        ...toolbarStyles(theme),
+        // borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
+        paddingRight: 0
+    },
 }))
 
 interface Props {
@@ -78,6 +100,13 @@ interface Props {
     open: boolean
     logo: ReactNode
     handleDrawerClose: () => void
+    handleDrawerOpen: () => void
+    isSignedIn: boolean
+    menus: {
+        title: string
+        icon: ReactElement
+        url: string
+    }[]
 }
 
 const AppDrawer: FunctionComponent<Props> = ({
@@ -85,6 +114,9 @@ const AppDrawer: FunctionComponent<Props> = ({
                                                  open,
                                                  logo,
                                                  handleDrawerClose,
+                                                 handleDrawerOpen,
+                                                 isSignedIn,
+                                                 menus
                                              }) => {
     const classes = useStyles()
     const theme = useTheme()
@@ -93,40 +125,23 @@ const AppDrawer: FunctionComponent<Props> = ({
     const [ isDrawerCloseScrollVisible ] = useScrollVisible(scrollableElementRef)
 
     const drawer = (<>
+        {open &&
         <Divider className={classes.drawerToolbarDivider} />
-        <List>
-            {[ 'Inbox', 'Starred', 'Send email', 'Drafts' ].map((text, index) => (
+        }
+        <List dense={!isMobile}>
+            {menus.map(menu => (
               <Tooltip
-                key={text}
-                title={text}
-                aria-label={text.toLowerCase()}
+                key={menu.title}
+                title={menu.title}
+                aria-label={menu.title.toLowerCase()}
                 placement="right"
                 disableFocusListener={isMobile || open}
                 disableHoverListener={isMobile || open}
                 disableTouchListener={isMobile || open}
               >
-                  <ListItem button>
-                      <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                      <ListItemText primary={text} />
-                  </ListItem>
-              </Tooltip>
-            ))}
-        </List>
-        <Divider />
-        <List>
-            {[ 'All mail', 'Trash', 'Spam' ].map((text, index) => (
-              <Tooltip
-                key={text}
-                title={text}
-                aria-label={text.toLowerCase()}
-                placement="right"
-                disableFocusListener={isMobile || open}
-                disableHoverListener={isMobile || open}
-                disableTouchListener={isMobile || open}
-              >
-                  <ListItem button>
-                      <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                      <ListItemText primary={text} />
+                  <ListItem button component={NavLink} to={menu.url} className={classes.menu}>
+                      <ListItemIcon className={classes.menuIcon}>{menu.icon}</ListItemIcon>
+                      <ListItemText primary={menu.title} primaryTypographyProps={{ variant: 'inherit' }} />
                   </ListItem>
               </Tooltip>
             ))}
@@ -141,12 +156,14 @@ const AppDrawer: FunctionComponent<Props> = ({
                 className={clsx(classes.drawer, {
                     [classes.drawerOpen]: open,
                     [classes.drawerClose]: !open,
+                    [classes.drawerSignedOut]: !isSignedIn
                 })}
                 classes={{
-                    paper: clsx({
+                    paper: clsx(classes.drawerPaper, {
                         [classes.drawerOpen]: open,
                         [classes.drawerClose]: !open,
-                        [classes.drawerCloseScrollable]: isDrawerCloseScrollVisible
+                        [classes.drawerSignedOut]: !isSignedIn,
+                        [classes.drawerCloseScrollable]: isDrawerCloseScrollVisible,
                     }),
                 }}
                 ModalProps={{
@@ -162,17 +179,19 @@ const AppDrawer: FunctionComponent<Props> = ({
                         open={open}
                         onClick={handleDrawerClose}
                         location="drawer"
+                        isSignedIn={isSignedIn}
                       />
                   </div>
                   {drawer}
               </Drawer>
           </Hidden>
           <Hidden smUp>
-              <Drawer
+              <SwipeableDrawer
                 variant="temporary"
                 anchor={theme.direction === 'rtl' ? 'right' : 'left'}
                 open={open}
                 onClose={handleDrawerClose}
+                onOpen={handleDrawerOpen}
                 classes={{
                     paper: classes.drawerPaper,
                 }}
@@ -187,7 +206,7 @@ const AppDrawer: FunctionComponent<Props> = ({
                       </Typography>
                   </div>
                   {drawer}
-              </Drawer>
+              </SwipeableDrawer>
           </Hidden>
       </nav>
     )

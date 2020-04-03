@@ -1,9 +1,8 @@
-import MenuIcon from '@material-ui/icons/Menu'
 import { IconButton, PropTypes } from '@material-ui/core'
 import React, { FunctionComponent, useRef } from 'react'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { animated, useTransition } from 'react-spring'
-import { MenuOpenRounded as MenuOpenRoundedIcon } from '@material-ui/icons'
+import { MenuOpenRounded as MenuOpenRoundedIcon, MenuRounded as MenuRoundedIcon } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -25,6 +24,7 @@ interface Props {
     ariaLabel?: string
     color?: PropTypes.Color
     edge?: 'start' | 'end' | false
+    isSignedIn: boolean
 }
 
 const MenuButton: FunctionComponent<Props> = ({
@@ -35,16 +35,19 @@ const MenuButton: FunctionComponent<Props> = ({
                                                   location,
                                                   ariaLabel,
                                                   color,
-                                                  edge
+                                                  edge,
+                                                  isSignedIn
                                               }) => {
     const classes = useStyles()
     const ref = useRef<HTMLDivElement>(null)
 
-    let show = true
-    if (location === 'app-bar') {
-        show = !isMobile && !open
-    } else if (location === 'drawer') {
-        show = !isMobile && open
+    let show = isSignedIn
+    if (isSignedIn) {
+        if (location === 'app-bar') {
+            show = isMobile || !open
+        } else if (location === 'drawer') {
+            show = !isMobile && open
+        }
     }
 
     const transitions = useTransition(show, null, {
@@ -70,7 +73,7 @@ const MenuButton: FunctionComponent<Props> = ({
                     className={className}
                   >
                       {location === 'drawer' && <MenuOpenRoundedIcon />}
-                      {location === 'app-bar' && <MenuIcon />}
+                      {location === 'app-bar' && <MenuRoundedIcon />}
                   </IconButton>
               </animated.div>
             )

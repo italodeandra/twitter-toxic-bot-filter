@@ -1,13 +1,16 @@
 import React, { useMemo } from 'react'
 import { createMuiTheme, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
-import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom'
 import Welcome from '../Welcome/Welcome'
 import { lightBlue } from '@material-ui/core/colors'
 import { CssBaseline, useMediaQuery } from '@material-ui/core'
-import { PolicyRounded as PolicyRoundedIcon } from '@material-ui/icons'
+import { HomeRounded as HomeRoundedIcon, PolicyRounded as PolicyRoundedIcon } from '@material-ui/icons'
 import { useLocalStorage } from 'react-use'
 import AppDrawer, { toolbarStyles } from './Drawer/AppDrawer'
 import AppAppBar from './AppBar/AppBar'
+import { useUser } from '../../store/reducers/user/userReducer'
+import Home from '../Home/Home'
+import Private from '../Private/Private'
 
 export const drawerWidth = 240
 
@@ -32,6 +35,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }))
 
+const menus = [
+    { title: 'Home', icon: <HomeRoundedIcon />, url: '/' }
+]
+
 function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     const theme = useMemo(
@@ -48,8 +55,10 @@ function App() {
     )
 
     const classes = useStyles()
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'))
+    const isMobile = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true })
     const [ open, setOpen ] = useLocalStorage<boolean>('NavigationDrawerOpen', false)
+    const [ user ] = useUser()
+    const isSignedIn = !!user
 
     const logo = useMemo(() => (
       <Link
@@ -87,12 +96,16 @@ function App() {
                     open={open}
                     logo={logo}
                     handleDrawerClose={handleDrawerClose}
+                    handleDrawerOpen={handleDrawerOpen}
+                    isSignedIn={isSignedIn}
+                    menus={menus}
                   />
 
                   <main className={classes.content}>
                       <div className={classes.toolbar} />
                       <Switch>
-                          <Route path="/"><Welcome /></Route>
+                          <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
+                          <Route path="/private">{isSignedIn ? <Private /> : <Redirect to="/" />}</Route>
                       </Switch>
                   </main>
               </Router>
