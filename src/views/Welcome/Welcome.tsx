@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }))
 
-const Welcome: FunctionComponent = () => {
+const Welcome = () => {
     const classes = useStyles()
 
     const Logo = <PolicyRoundedIcon className={classes.logo} aria-label="twitter toxic-bot filter's logo" />
@@ -64,7 +64,10 @@ const Welcome: FunctionComponent = () => {
           </Typography>
           <Typography paragraph align="justify">
               Start by signing in using you Twitter account by click on top right corner or right down below. Everything
-              will be explained as you go. Have a nice journey.
+              will be explained as you go.
+          </Typography>
+          <Typography paragraph align="justify">
+              Have a nice journey.
           </Typography>
           <p>
               <Button
