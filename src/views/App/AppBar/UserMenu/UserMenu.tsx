@@ -1,18 +1,28 @@
 import React, { useState } from 'react'
-import { Button, ListItemIcon, ListSubheader, Menu, MenuItem, Typography } from '@material-ui/core'
+import { Box, Button, Divider, ListItemIcon, ListSubheader, Menu, MenuItem, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { removeUser } from '../../../../store/reducers/user/userActions'
 import { useUser } from '../../../../store/reducers/user/userReducer'
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
 import getInitials from '../../../../utils/getInitials'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         padding: 0,
         width: 36,
         minWidth: 36,
         height: 36,
         borderRadius: 18
+    },
+    signature: {
+        fontFamily: '\'Montez\', cursive',
+        fontSize: theme.typography.pxToRem(24),
+        textDecoration: 'none',
+        color: 'inherit'
+    },
+    madeBy: {
+        fontSize: theme.typography.pxToRem(10),
+        marginBottom: 4
     }
 }))
 
@@ -67,6 +77,24 @@ const UserMenu = () => {
                 </ListItemIcon>
                 <Typography variant="inherit">Sign out</Typography>
             </MenuItem>
+            <Box mt={2}>
+                <Divider />
+            </Box>
+            <Box m={2} mt={3} display="flex" alignItems="center" flexDirection="column">
+                <Typography variant="overline" className={classes.madeBy}>
+                    Made with love and javascript by
+                </Typography>
+                <a href="https://italodeandra.de" target="_blank" rel="noopener noreferrer"
+                   className={classes.signature}>
+                    {/*<Image
+                    src="/signature.png"
+                    color="transparent"
+                    style={{ height: 150, width: 500, paddingTop: undefined }}
+                  />*/}
+                    Ítalo Andrade
+                </a>
+                <Typography variant="overline">© 2020</Typography>
+            </Box>
         </Menu>
     </>)
 }
