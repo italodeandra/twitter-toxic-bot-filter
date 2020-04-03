@@ -5,26 +5,30 @@ import { Twitter as TwitterIcon } from '@material-ui/icons'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { drawerWidth } from '../App'
 import MenuButton from '../MenuButton/MenuButton'
+import { useUser } from '../../../store/reducers/user/userReducer'
+import { updateUser } from '../../../store/reducers/user/userActions'
+import UserMenu from './UserMenu/UserMenu'
 
 const useStyles = makeStyles((theme: Theme) => ({
     appBar: {
         zIndex: theme.zIndex.drawer + 1,
         // boxShadow: theme.shadows[0],
-        transition: theme.transitions.create([ 'width', 'margin', 'box-shadow' ], {
+        transition: theme.transitions.create([ 'width', 'margin', 'box-shadow', 'background-color' ], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
+        color: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.contrastText
+
     },
     appBarShift: {
+        zIndex: theme.zIndex.drawer,
         marginLeft: drawerWidth,
         width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create([ 'width', 'margin', 'box-shadow' ], {
+        transition: theme.transitions.create([ 'width', 'margin', 'box-shadow', 'background-color' ], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
         }),
-    },
-    appBarScrolled: {
-        boxShadow: theme.shadows[4],
     },
     menuButton: {
         marginRight: theme.spacing(2),
@@ -32,6 +36,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     hide: {
         display: 'none',
     },
+    title: {
+        fontSize: 17
+    },
+    userMenuButton: {
+        padding: 0,
+        width: 36,
+        minWidth: 36,
+        height: 36,
+        borderRadius: 18
+    }
 }))
 
 const ElevationScroll: FunctionComponent = ({ children }) => {
@@ -45,7 +59,9 @@ const ElevationScroll: FunctionComponent = ({ children }) => {
     return React.cloneElement(children as ReactElement, {
         elevation: trigger ? 4 : 0,
         // elevation: 0,
-        // className: trigger ? classes.appBarScrolled : undefined
+        style: {
+            // backgroundColor: !trigger ? 'transparent' : undefined
+        }
     })
 }
 
@@ -63,16 +79,25 @@ const AppAppBar: FunctionComponent<Props> = ({
                                                  handleDrawerOpen,
                                              }) => {
     const classes = useStyles()
+    const [ user, userDispatch ] = useUser()
+    const isSignedIn = !!user
+
+    function handleSignInClick() {
+        userDispatch(updateUser({
+            id: 1,
+            fullName: 'Ítalo Andrade'
+        }))
+    }
 
     return (
       <ElevationScroll>
           <AppBar
             position="fixed"
             className={clsx(classes.appBar, {
-                [classes.appBarShift]: !isMobile && open,
+                [classes.appBarShift]: isSignedIn && !isMobile && open,
             })}
           >
-              <Toolbar>
+              <Toolbar variant={!isMobile ? 'dense' : undefined}>
                   <MenuButton
                     edge="start"
                     color="inherit"
@@ -82,26 +107,36 @@ const AppAppBar: FunctionComponent<Props> = ({
                     open={open}
                     onClick={handleDrawerOpen}
                     location="app-bar"
+                    isSignedIn={isSignedIn}
                   />
 
                   {logo}
 
                   <Hidden xsDown={!(open)} smDown={open}>
-                      <Typography variant="h6" noWrap>
+                      <Typography variant="h6" noWrap className={classes.title}>
                           Twitter Toxic-bot Filter
                       </Typography>
                   </Hidden>
 
                   <div style={{ flexGrow: 1 }} />
 
-                  <Button
-                    color="inherit"
-                    variant="outlined"
-                    startIcon={<TwitterIcon />}
-                    disableElevation
-                  >
-                      Sign in
-                  </Button>
+                  <div>
+                      {isSignedIn
+                        ? (
+                          <UserMenu />
+                        ) : (
+                          <Button
+                            color="inherit"
+                            variant="outlined"
+                            startIcon={<TwitterIcon />}
+                            disableElevation
+                            onClick={handleSignInClick}
+                          >
+                              Sign in
+                          </Button>
+                        )
+                      }
+                  </div>
               </Toolbar>
           </AppBar>
       </ElevationScroll>
