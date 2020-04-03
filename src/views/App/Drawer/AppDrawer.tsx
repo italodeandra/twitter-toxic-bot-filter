@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     toolbar: {
         ...toolbarStyles(theme),
         // borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
-        paddingRight: 0
+        // paddingRight: 0
     },
 }))
 
