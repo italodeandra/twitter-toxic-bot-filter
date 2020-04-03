@@ -1,21 +1,19 @@
-import React, { FunctionComponent } from 'react'
+import React from 'react'
 import { Button, Container, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PolicyRounded as PolicyRoundedIcon, Twitter as TwitterIcon } from '@material-ui/icons'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        paddingTop: theme.spacing(8),
-        paddingRight: theme.spacing(1),
-        paddingBottom: theme.spacing(1),
-        paddingLeft: theme.spacing(1)
+        [theme.breakpoints.up('sm')]: {
+            padding: theme.spacing(8, 2),
+        },
     },
     logo: {
         marginBottom: -7,
     },
     quote: {
-        paddingLeft: theme.spacing(3),
-        paddingRight: theme.spacing(3),
+        padding: theme.spacing(0, 3),
         maxWidth: theme.spacing(80)
     },
     biggerBottomGutter: {
