@@ -78,6 +78,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: '0 !important'
     },
     menu: {
+        transition: theme.transitions.create([ 'backgroundColor', 'color', 'fontWeight' ], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.short,
+        }),
+
         '&.active': {
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
@@ -106,6 +111,7 @@ interface Props {
         title: string
         icon: ReactElement
         url: string
+        exact?: boolean
     }[]
 }
 
@@ -139,7 +145,7 @@ const AppDrawer: FunctionComponent<Props> = ({
                 disableHoverListener={isMobile || open}
                 disableTouchListener={isMobile || open}
               >
-                  <ListItem button component={NavLink} to={menu.url} className={classes.menu}>
+                  <ListItem button component={NavLink} to={menu.url} className={classes.menu} exact={menu.exact}>
                       <ListItemIcon className={classes.menuIcon}>{menu.icon}</ListItemIcon>
                       <ListItemText primary={menu.title} primaryTypographyProps={{ variant: 'inherit' }} />
                   </ListItem>
