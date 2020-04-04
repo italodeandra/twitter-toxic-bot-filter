@@ -4,7 +4,11 @@ import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-ro
 import Welcome from '../Welcome/Welcome'
 import { lightBlue } from '@material-ui/core/colors'
 import { CssBaseline, useMediaQuery } from '@material-ui/core'
-import { HomeRounded as HomeRoundedIcon, PolicyRounded as PolicyRoundedIcon } from '@material-ui/icons'
+import {
+    HomeRounded as HomeRoundedIcon,
+    PolicyRounded as PolicyRoundedIcon,
+    TrackChangesRounded as TrackChangesRoundedIcon
+} from '@material-ui/icons'
 import { useLocalStorage } from 'react-use'
 import AppDrawer, { toolbarStyles } from './Drawer/AppDrawer'
 import AppAppBar from './AppBar/AppBar'
@@ -36,7 +40,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const menus = [
-    { title: 'Home', icon: <HomeRoundedIcon />, url: '/' }
+    { title: 'Home', icon: <HomeRoundedIcon />, url: '/', exact: true },
+    { title: 'Tweet trap', icon: <TrackChangesRoundedIcon />, url: 'tweet-trap' }
 ]
 
 function App() {
@@ -105,7 +110,7 @@ function App() {
                       <div className={classes.toolbar} />
                       <Switch>
                           <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
-                          <Route path="/private">{isSignedIn ? <Private /> : <Redirect to="/" />}</Route>
+                          <Route path="/tweet-trap">{isSignedIn ? <Private /> : <Redirect to="/" />}</Route>
                       </Switch>
                   </main>
               </Router>
