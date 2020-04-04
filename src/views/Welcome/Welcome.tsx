@@ -2,15 +2,13 @@ import React from 'react'
 import { Box, Button, Container, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PolicyRounded as PolicyRoundedIcon, Twitter as TwitterIcon } from '@material-ui/icons'
+import { useMount } from 'react-use'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         [theme.breakpoints.up('sm')]: {
             padding: theme.spacing(8, 2),
         },
-    },
-    logo: {
-        marginBottom: -7,
     },
     quote: {
         padding: theme.spacing(0, 3),
@@ -30,14 +28,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Welcome = () => {
     const classes = useStyles()
 
-    const Logo = <PolicyRoundedIcon className={classes.logo} aria-label="twitter toxic-bot filter's logo" />
+    const logo = <PolicyRoundedIcon style={{ marginBottom: -7 }} aria-label="twitter toxic-bot filter's logo" />
+
+    useMount(() => {
+        window.scrollTo(0, 0)
+    })
+
+    function handleSignInClick() {
+        document.getElementById('sign-in-button')!.click()
+    }
 
     return (
       <Container maxWidth="md" className={classes.root}>
           <Box>
               <Typography variant="h4" gutterBottom>Welcome!</Typography>
               <Typography paragraph align="justify">
-                  This is the <strong>{Logo} Twitter Toxic-bot Filter</strong> app. It will help you filter out and mute
+                  This is the <strong>{logo} Twitter Toxic-bot Filter</strong> app. It will help you filter out and mute
                   all the Twitter users that are triggered by a
                   specific subject and answers in an aggressive or unwanted way. Among other things.
               </Typography>
@@ -87,6 +93,7 @@ const Welcome = () => {
                 color="primary"
                 startIcon={<TwitterIcon />}
                 disableElevation
+                onClick={handleSignInClick}
               >
                   Sign in
               </Button>

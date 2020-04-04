@@ -126,6 +126,7 @@ const AppAppBar: FunctionComponent<Props> = ({
                           <UserMenu />
                         ) : (
                           <Button
+                            id="sign-in-button"
                             color="inherit"
                             variant="outlined"
                             startIcon={<TwitterIcon />}
