@@ -1,6 +1,16 @@
-import React, { FunctionComponent, ReactElement, ReactNode } from 'react'
+import React, { FunctionComponent, ReactElement, ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
-import { AppBar, Button, Hidden, Toolbar, Typography, useScrollTrigger } from '@material-ui/core'
+import {
+    AppBar,
+    Box,
+    Button,
+    CircularProgress,
+    Hidden,
+    Toolbar,
+    Typography,
+    useScrollTrigger,
+    useTheme
+} from '@material-ui/core'
 import { Twitter as TwitterIcon } from '@material-ui/icons'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { drawerWidth } from '../App'
@@ -8,6 +18,11 @@ import MenuButton from '../MenuButton/MenuButton'
 import { useUser } from '../../../store/reducers/user/userReducer'
 import { updateUser } from '../../../store/reducers/user/userActions'
 import UserMenu from './UserMenu/UserMenu'
+import useAuthApi from '../../../api/feedback/useAuthApi'
+import config from '../../../config'
+import { useSnackbar } from 'notistack'
+import { useHistory, useLocation } from 'react-router-dom'
+import { useLocalStorage } from 'react-use'
 
 const useStyles = makeStyles((theme: Theme) => ({
     appBar: {
@@ -78,16 +93,76 @@ const AppAppBar: FunctionComponent<Props> = ({
                                                  logo,
                                                  handleDrawerOpen,
                                              }) => {
+    const theme = useTheme()
     const classes = useStyles()
     const [ user, userDispatch ] = useUser()
     const isSignedIn = !!user
+    const [ authStartState, { start: authStart } ] = useAuthApi()
+    const [ authFinishState, { finish: authFinish } ] = useAuthApi()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const location = useLocation()
+    const params = Object.fromEntries(new URLSearchParams(location.search))
+    const history = useHistory()
+    const [ authPersistedState, setAuthPersistedState ] =
+      useLocalStorage<{ oauthToken: string, oauthTokenSecret: string } | undefined>('AuthPersistedState', undefined)
 
     function handleSignInClick() {
-        userDispatch(updateUser({
-            id: 1,
-            fullName: 'Ítalo Andrade'
-        }))
+        authStart()
     }
+
+    useEffect(() => {
+        if (authStartState.status === 'success') {
+            const oauthToken = authStartState.data.oauthToken
+            const oauthTokenSecret = authStartState.data.oauthTokenSecret
+            setAuthPersistedState({
+                oauthToken,
+                oauthTokenSecret
+            })
+            window.open(config.twitterAuthenticateUrl(oauthToken), '_self')
+        } else if (authStartState.status === 'error') {
+            enqueueSnackbar('There was an error while trying to sign in with Twitter. Please, try again later.', {
+                variant: 'error',
+                persist: true,
+                action: key => (
+                  <Button onClick={() => closeSnackbar(key)} color="inherit">
+                      Okay
+                  </Button>
+                )
+            })
+            console.error(authStartState)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ authStartState.status ])
+
+    useEffect(() => {
+        const oauthVerifier = params.oauth_verifier
+        if (authPersistedState && oauthVerifier) {
+            setAuthPersistedState(undefined)
+            const oauthToken = authPersistedState.oauthToken
+            const oauthTokenSecret = authPersistedState.oauthTokenSecret
+            history.replace(history.location.pathname)
+            authFinish(oauthToken, oauthTokenSecret, oauthVerifier)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
+        if (authFinishState.status === 'success') {
+            userDispatch(updateUser(authFinishState.data))
+        } else if (authFinishState.status === 'error') {
+            enqueueSnackbar('There was an error while trying to sign in with Twitter. Please, try again later.', {
+                variant: 'error',
+                persist: true,
+                action: key => (
+                  <Button onClick={() => closeSnackbar(key)} color="inherit">
+                      Okay
+                  </Button>
+                )
+            })
+            console.error(authFinishState)
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ authFinishState.status ])
 
     return (
       <ElevationScroll>
@@ -120,24 +195,28 @@ const AppAppBar: FunctionComponent<Props> = ({
 
                   <div style={{ flexGrow: 1 }} />
 
-                  <div>
+                  <Box display="flex" alignItems="center">
                       {isSignedIn
                         ? (
                           <UserMenu />
-                        ) : (
-                          <Button
-                            id="sign-in-button"
-                            color="inherit"
-                            variant="outlined"
-                            startIcon={<TwitterIcon />}
-                            disableElevation
-                            onClick={handleSignInClick}
-                          >
-                              Sign in
-                          </Button>
-                        )
+                        ) : (<>
+                            {[ authStartState.status, authFinishState.status ].includes('loading') &&
+                            <CircularProgress color="inherit" size={theme.spacing(3)}
+                                              style={{ marginRight: theme.spacing(2) }} />
+                            }
+                            <Button
+                              id="sign-in-button"
+                              color="inherit"
+                              variant="outlined"
+                              startIcon={<TwitterIcon />}
+                              disableElevation
+                              onClick={handleSignInClick}
+                              disabled={[ authStartState.status, authFinishState.status ].includes('loading')}
+                            >Sign in
+                            </Button>
+                        </>)
                       }
-                  </div>
+                  </Box>
               </Toolbar>
           </AppBar>
       </ElevationScroll>

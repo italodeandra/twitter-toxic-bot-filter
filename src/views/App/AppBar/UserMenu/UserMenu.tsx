@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, Divider, ListItemIcon, ListSubheader, Menu, MenuItem, Theme, Typography } from '@material-ui/core'
+import { Box, Button, Divider, ListItemIcon, Menu, MenuItem, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { removeUser } from '../../../../store/reducers/user/userActions'
 import { useUser } from '../../../../store/reducers/user/userReducer'
@@ -12,7 +12,9 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: 36,
         minWidth: 36,
         height: 36,
-        borderRadius: 18
+        borderRadius: 18,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover'
     },
     signature: {
         fontFamily: '\'Montez\', cursive',
@@ -53,8 +55,11 @@ const UserMenu = () => {
           aria-controls="user-menu"
           aria-haspopup="true"
           onClick={handleClick}
+          style={{
+              backgroundImage: 'url(' + user!.profileImageUrl + ')'
+          }}
         >
-            {getInitials(user!.fullName)}
+            {!user!.profileImageUrl && getInitials(user!.screenName, '_')}
         </Button>
         <Menu
           id="user-menu"
@@ -68,9 +73,10 @@ const UserMenu = () => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-            <ListSubheader component="div">
-                Ítalo Andrade
-            </ListSubheader>
+            <Box mx={2} mt={1} mb={2}>
+                <Typography variant="subtitle2">{user!.name}</Typography>
+                <Typography variant="caption">@{user!.screenName}</Typography>
+            </Box>
             <MenuItem onClick={handleSignOutClick}>
                 <ListItemIcon>
                     <ExitToAppIcon fontSize="small" />

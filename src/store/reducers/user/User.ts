@@ -1,6 +1,12 @@
 export type User = {
-    id: number
-    fullName: string
+    id: string
+    screenName: string
+
+    accessToken: string
+    accessTokenSecret: string
+
+    name?: string
+    profileImageUrl?: string
 }
 
 export type NullableUser = User | null

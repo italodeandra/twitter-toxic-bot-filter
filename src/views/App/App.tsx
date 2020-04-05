@@ -14,7 +14,8 @@ import AppDrawer, { toolbarStyles } from './Drawer/AppDrawer'
 import AppAppBar from './AppBar/AppBar'
 import { useUser } from '../../store/reducers/user/userReducer'
 import Home from '../Home/Home'
-import Private from '../Private/Private'
+import TweetTrap from '../TweetTrap/TweetTrap'
+import { SnackbarProvider } from 'notistack'
 
 export const drawerWidth = 240
 
@@ -86,35 +87,37 @@ function App() {
 
     return (
       <div className={classes.root}>
-          <ThemeProvider theme={theme}>
-              <CssBaseline />
+          <SnackbarProvider maxSnack={5}>
+              <ThemeProvider theme={theme}>
+                  <CssBaseline />
 
-              <Router>
-                  <AppAppBar
-                    isMobile={isMobile}
-                    open={open}
-                    logo={logo}
-                    handleDrawerOpen={handleDrawerOpen}
-                  />
-                  <AppDrawer
-                    isMobile={isMobile}
-                    open={open}
-                    logo={logo}
-                    handleDrawerClose={handleDrawerClose}
-                    handleDrawerOpen={handleDrawerOpen}
-                    isSignedIn={isSignedIn}
-                    menus={menus}
-                  />
+                  <Router>
+                      <AppAppBar
+                        isMobile={isMobile}
+                        open={open}
+                        logo={logo}
+                        handleDrawerOpen={handleDrawerOpen}
+                      />
+                      <AppDrawer
+                        isMobile={isMobile}
+                        open={open}
+                        logo={logo}
+                        handleDrawerClose={handleDrawerClose}
+                        handleDrawerOpen={handleDrawerOpen}
+                        isSignedIn={isSignedIn}
+                        menus={menus}
+                      />
 
-                  <main className={classes.content}>
-                      <div className={classes.toolbar} />
-                      <Switch>
-                          <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
-                          <Route path="/tweet-trap">{isSignedIn ? <Private /> : <Redirect to="/" />}</Route>
-                      </Switch>
-                  </main>
-              </Router>
-          </ThemeProvider>
+                      <main className={classes.content}>
+                          <div className={classes.toolbar} />
+                          <Switch>
+                              <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
+                              <Route path="/tweet-trap">{isSignedIn ? <TweetTrap /> : <Redirect to="/" />}</Route>
+                          </Switch>
+                      </main>
+                  </Router>
+              </ThemeProvider>
+          </SnackbarProvider>
       </div>
     )
 }

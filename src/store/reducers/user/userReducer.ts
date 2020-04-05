@@ -1,6 +1,7 @@
 import { createReducerContext } from 'react-use'
 import { NullableUser } from './User'
 import { ActionType, UserActions } from './userActions'
+import { Reducer } from 'react'
 
 let localStorageItem = window.localStorage.getItem('User') || 'null'
 let localStorageUser: NullableUser = null
@@ -26,4 +27,4 @@ function reducer(state: NullableUser, action: ActionType) {
     }
 }
 
-export const [ useUser, UserProvider ] = createReducerContext(reducer, initialState)
+export const [ useUser, UserProvider ] = createReducerContext<Reducer<NullableUser, ActionType>>(reducer, initialState)
