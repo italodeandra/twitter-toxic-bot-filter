@@ -39,7 +39,7 @@ const Welcome = () => {
     }
 
     return (
-      <Container maxWidth="md" className={classes.root}>
+      <Container maxWidth="md" disableGutters className={classes.root}>
           <Box>
               <Typography variant="h4" gutterBottom>Welcome!</Typography>
               <Typography paragraph align="justify">
