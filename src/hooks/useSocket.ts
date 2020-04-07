@@ -4,7 +4,7 @@ import config from '../config'
 let socket: SocketIOClient.Socket
 
 export default function useSocket() {
-    if (!socket) socket = SocketIO.connect(config.apiSocket)
+    if (!socket) socket = SocketIO.connect(config.apiHost)
 
     return socket
 }

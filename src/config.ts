@@ -1,15 +1,12 @@
 const config: any = {
     production: {
         apiHost: 'https://twitter-toxic-bot-filter-api.italodeandra.de',
-        apiSocket: 'ws://twitter-toxic-bot-filter-api.italodeandra.de',
     },
     staging: {
         apiHost: 'https://twitter-toxic-bot-filter-api-staging.italodeandra.de',
-        apiSocket: 'ws://twitter-toxic-bot-filter-api-staging.italodeandra.de',
     },
     development: {
         apiHost: 'http://192.168.17.103:3001',
-        apiSocket: 'ws://192.168.17.103:3001',
     }
 }
 
