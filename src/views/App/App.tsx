@@ -9,13 +9,16 @@ import {
     PolicyRounded as PolicyRoundedIcon,
     TrackChangesRounded as TrackChangesRoundedIcon
 } from '@material-ui/icons'
-import { useLocalStorage } from 'react-use'
+import { useDeepCompareEffect, useLocalStorage, useMount } from 'react-use'
 import AppDrawer, { toolbarStyles } from './Drawer/AppDrawer'
 import AppAppBar from './AppBar/AppBar'
 import { useUser } from '../../store/reducers/user/userReducer'
 import Home from '../Home/Home'
 import TweetTrap from '../TweetTrap/TweetTrap'
 import { SnackbarProvider } from 'notistack'
+import TweetTrapSelected from '../TweetTrap/Selected/TweetTrapSelected'
+import useSocket from '../../hooks/useSocket'
+import NotFound from '../NotFound/NotFound'
 
 export const drawerWidth = 240
 
@@ -36,13 +39,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
     content: {
         flexGrow: 1,
-        padding: theme.spacing(3),
+        // padding: theme.spacing(3),
     },
 }))
 
 const menus = [
     { title: 'Home', icon: <HomeRoundedIcon />, url: '/', exact: true },
-    { title: 'Tweet trap', icon: <TrackChangesRoundedIcon />, url: 'tweet-trap' }
+    { title: 'Tweet trap', icon: <TrackChangesRoundedIcon />, url: '/tweet-trap' }
 ]
 
 function App() {
@@ -66,6 +69,19 @@ function App() {
     const [ user ] = useUser()
     const isSignedIn = !!user
 
+    const socket = useSocket()
+    useMount(() => {
+        socket.on('reconnect', () => {
+            socket.emit('auth', user)
+        })
+        socket.on('authenticated', (authenticated: boolean) => {
+            (socket as any).authenticated = authenticated
+        })
+    })
+    useDeepCompareEffect(() => {
+        socket.emit('auth', user)
+    }, [ user ])
+
     const logo = useMemo(() => (
       <Link
         to="/"
@@ -87,37 +103,43 @@ function App() {
 
     return (
       <div className={classes.root}>
-          <SnackbarProvider maxSnack={5}>
-              <ThemeProvider theme={theme}>
-                  <CssBaseline />
+          <ThemeProvider theme={theme}>
+              <SnackbarProvider maxSnack={5}>
+                  <>
+                      <CssBaseline />
 
-                  <Router>
-                      <AppAppBar
-                        isMobile={isMobile}
-                        open={open}
-                        logo={logo}
-                        handleDrawerOpen={handleDrawerOpen}
-                      />
-                      <AppDrawer
-                        isMobile={isMobile}
-                        open={open}
-                        logo={logo}
-                        handleDrawerClose={handleDrawerClose}
-                        handleDrawerOpen={handleDrawerOpen}
-                        isSignedIn={isSignedIn}
-                        menus={menus}
-                      />
+                      <Router>
+                          <AppAppBar
+                            isMobile={isMobile}
+                            open={open}
+                            logo={logo}
+                            handleDrawerOpen={handleDrawerOpen}
+                          />
+                          <AppDrawer
+                            isMobile={isMobile}
+                            open={open}
+                            logo={logo}
+                            handleDrawerClose={handleDrawerClose}
+                            handleDrawerOpen={handleDrawerOpen}
+                            isSignedIn={isSignedIn}
+                            menus={menus}
+                          />
 
-                      <main className={classes.content}>
-                          <div className={classes.toolbar} />
-                          <Switch>
-                              <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
-                              <Route path="/tweet-trap">{isSignedIn ? <TweetTrap /> : <Redirect to="/" />}</Route>
-                          </Switch>
-                      </main>
-                  </Router>
-              </ThemeProvider>
-          </SnackbarProvider>
+                          <main className={classes.content}>
+                              <div className={classes.toolbar} />
+                              <Switch>
+                                  <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
+                                  <Route path="/tweet-trap" exact>{isSignedIn ? <TweetTrap /> :
+                                    <Redirect to="/" />}</Route>
+                                  <Route path="/tweet-trap/:id">{isSignedIn ? <TweetTrapSelected /> :
+                                    <Redirect to="/" />}</Route>
+                                  <Route path="**"><NotFound /></Route>
+                              </Switch>
+                          </main>
+                      </Router>
+                  </>
+              </SnackbarProvider>
+          </ThemeProvider>
       </div>
     )
 }

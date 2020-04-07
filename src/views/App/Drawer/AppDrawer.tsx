@@ -31,6 +31,7 @@ export const toolbarStyles = (theme: Theme) => ({
         justifyContent: 'flex-start',
         minHeight: '56px !important'
     },
+    color: theme.palette.primary.main
 })
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -145,7 +146,14 @@ const AppDrawer: FunctionComponent<Props> = ({
                 disableHoverListener={isMobile || open}
                 disableTouchListener={isMobile || open}
               >
-                  <ListItem button component={NavLink} to={menu.url} className={classes.menu} exact={menu.exact}>
+                  <ListItem
+                    button
+                    component={NavLink}
+                    to={menu.url}
+                    className={classes.menu}
+                    exact={menu.exact}
+                    onClick={isMobile ? handleDrawerClose : undefined}
+                  >
                       <ListItemIcon className={classes.menuIcon}>{menu.icon}</ListItemIcon>
                       <ListItemText primary={menu.title} primaryTypographyProps={{ variant: 'inherit' }} />
                   </ListItem>

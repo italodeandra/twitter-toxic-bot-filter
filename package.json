@@ -27,6 +27,8 @@
     "react-scripts": "3.4.1",
     "react-spring": "^8.0.27",
     "react-use": "^13.27.1",
+    "react-window": "^1.8.5",
+    "socket.io-client": "^2.3.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
@@ -49,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/socket.io-client": "^1.4.32"
   }
 }

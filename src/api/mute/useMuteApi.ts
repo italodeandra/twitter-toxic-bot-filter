@@ -3,24 +3,25 @@ import apiReducer, { State } from '../apiReducer'
 import fetch from 'cross-fetch'
 import config from '../../config'
 import { useUser } from '../../store/reducers/user/userReducer'
-import Feedback from './Feedback'
 
-type FeedbackApi = [ State, (feedback: Feedback) => void ]
+type MuteApi = [ State, {
+    mute(names: string[]): void
+} ]
 
-export default function useFeedbackApi(): FeedbackApi {
+export default function useMuteApi(initialState: State = { status: 'empty' }): MuteApi {
     const [ user ] = useUser()
-    const [ state, dispatch ] = useReducer(apiReducer, { status: 'empty' })
+    const [ state, dispatch ] = useReducer(apiReducer, initialState)
 
-    function save(feedback: Feedback) {
+    function mute(names: string[]) {
         dispatch({ type: 'request' })
 
-        fetch(`${config.apiHost}/feedback`, {
+        fetch(`${config.apiHost}/mute`, {
             method: 'post',
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': 'Bearer ' + btoa(JSON.stringify(user))
             },
-            body: JSON.stringify(feedback)
+            body: JSON.stringify({ names })
         })
           .then(res => {
               if (res.ok) {
@@ -35,5 +36,5 @@ export default function useFeedbackApi(): FeedbackApi {
           )
     }
 
-    return [ state, save ]
+    return [ state, { mute } ]
 }

@@ -3,6 +3,7 @@ import { Box, Button, Container, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PolicyRounded as PolicyRoundedIcon, Twitter as TwitterIcon } from '@material-ui/icons'
 import { useMount } from 'react-use'
+import useTitle from '../../hooks/useTitle'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const Welcome = () => {
+    useTitle('Twitter Toxic-bot Filter')
     const classes = useStyles()
 
     const logo = <PolicyRoundedIcon style={{ marginBottom: -7 }} aria-label="twitter toxic-bot filter's logo" />
@@ -39,7 +41,7 @@ const Welcome = () => {
     }
 
     return (
-      <Container maxWidth="md" disableGutters className={classes.root}>
+      <Container maxWidth="md" disableGutters className={classes.root}><Box p={3}>
           <Box>
               <Typography variant="h4" gutterBottom>Welcome!</Typography>
               <Typography paragraph align="justify">
@@ -113,7 +115,7 @@ const Welcome = () => {
               </a>
               <Typography variant="overline">© 2020</Typography>
           </Box>
-      </Container>
+      </Box></Container>
     )
 }
 

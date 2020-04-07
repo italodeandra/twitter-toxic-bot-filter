@@ -5,7 +5,6 @@ import {
     Box,
     Button,
     CircularProgress,
-    Hidden,
     Toolbar,
     Typography,
     useScrollTrigger,
@@ -18,11 +17,12 @@ import MenuButton from '../MenuButton/MenuButton'
 import { useUser } from '../../../store/reducers/user/userReducer'
 import { updateUser } from '../../../store/reducers/user/userActions'
 import UserMenu from './UserMenu/UserMenu'
-import useAuthApi from '../../../api/feedback/useAuthApi'
+import useAuthApi from '../../../api/auth/useAuthApi'
 import config from '../../../config'
 import { useSnackbar } from 'notistack'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLocalStorage } from 'react-use'
+import useTitle from '../../../hooks/useTitle'
 
 const useStyles = makeStyles((theme: Theme) => ({
     appBar: {
@@ -105,6 +105,7 @@ const AppAppBar: FunctionComponent<Props> = ({
     const history = useHistory()
     const [ authPersistedState, setAuthPersistedState ] =
       useLocalStorage<{ oauthToken: string, oauthTokenSecret: string } | undefined>('AuthPersistedState', undefined)
+    const [ title ] = useTitle()
 
     function handleSignInClick() {
         authStart()
@@ -187,11 +188,11 @@ const AppAppBar: FunctionComponent<Props> = ({
 
                   {logo}
 
-                  <Hidden xsDown={!(open)} smDown={open}>
-                      <Typography variant="h6" noWrap className={classes.title}>
-                          Twitter Toxic-bot Filter
-                      </Typography>
-                  </Hidden>
+                  {(title !== 'Twitter Toxic-bot Filter' || !isMobile) &&
+                  <Typography variant="h6" noWrap className={classes.title}>
+                      {title}
+                  </Typography>
+                  }
 
                   <div style={{ flexGrow: 1 }} />
 

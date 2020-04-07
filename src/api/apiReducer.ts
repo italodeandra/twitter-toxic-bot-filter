@@ -9,7 +9,7 @@ type HNResponse = any
 type Action =
   | { type: 'request' }
   | { type: 'success', results: HNResponse }
-  | { type: 'failure', error: string };
+  | { type: 'failure', error: string }
 
 export default function apiReducer(state: State, action: Action): State {
     switch (action.type) {

@@ -4,8 +4,8 @@ import fetch from 'cross-fetch'
 import config from '../../config'
 
 type AuthApi = [ State, {
-    start: () => void
-    finish: (oauthToken: string, oauthTokenSecret: string, oauthVerifier: string) => void
+    start(): void
+    finish(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string): void
 } ]
 
 export default function useAuthApi(): AuthApi {
@@ -25,9 +25,7 @@ export default function useAuthApi(): AuthApi {
               }
           })
           .then(
-            (data) => {
-                dispatch({ type: 'success', results: data })
-            },
+            (data) => dispatch({ type: 'success', results: data }),
             (error) => dispatch({ type: 'failure', error: typeof error.json == 'function' ? error.json() : error })
           )
     }
@@ -54,9 +52,7 @@ export default function useAuthApi(): AuthApi {
               }
           })
           .then(
-            (data) => {
-                dispatch({ type: 'success', results: data })
-            },
+            (data) => dispatch({ type: 'success', results: data }),
             (error) => dispatch({ type: 'failure', error: typeof error.json == 'function' ? error.json() : error })
           )
     }
