@@ -25,12 +25,12 @@ export default function useBotScoreApi(initialState: State = { status: 'empty' }
               if (res.ok) {
                   return res.json()
               } else {
-                  throw res
+                  throw res.json()
               }
           })
           .then(
             (data) => dispatch({ type: 'success', results: data }),
-            (error) => dispatch({ type: 'failure', error: typeof error.json == 'function' ? error.json() : error })
+            (errorP) => errorP.then((error: any) => dispatch({ type: 'failure', error }))
           )
     }
 

@@ -1,7 +1,7 @@
 import { createGlobalState } from 'react-use'
 import { useEffect } from 'react'
 
-const useTitleGlobal = createGlobalState<string>('')
+const useTitleGlobal = createGlobalState<string>('Twitter Toxic-bot Filter')
 
 export default function useTitle(title?: string) {
     const [ stateTitle, setTitle ] = useTitleGlobal()

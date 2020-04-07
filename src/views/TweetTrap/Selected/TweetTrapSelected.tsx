@@ -29,7 +29,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import useTweetTrapApi from '../../../api/tweetTrap/useTweetTrapApi'
 import { useSnackbar } from 'notistack'
-import { Link as RouterLink, useRouteMatch } from 'react-router-dom'
+import { Link as RouterLink, useHistory, useRouteMatch } from 'react-router-dom'
 import TweetTrapListSkeleton from '../TweetTrapListSkeleton'
 import { default as ETweetTrap } from '../../../api/tweetTrap/TweetTrap'
 import useSocket from '../../../hooks/useSocket'
@@ -79,6 +79,7 @@ const TweetTrapSelected = () => {
     const [ tweetTrapRepliesState, { getReplies: getTweetTrapReplies, manualUpdateData: manualUpdateTweetTrapReplies } ] = useTweetTrapApi({ status: 'loading' })
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const route = useRouteMatch<{ id: string }>()
+    const history = useHistory()
     const [ selectedNames, setSelectedNames ] = useState<string[]>([])
     const socket = useSocket()
     const [ autoSync, setAutoSync ] = useState(false)
@@ -127,7 +128,31 @@ const TweetTrapSelected = () => {
     }, [])
 
     useEffect(() => {
-        if ([ tweetTrapState.status, tweetTrapRepliesState.status ].includes('error')) {
+        let error = false
+        let notFound = false
+
+
+        if (tweetTrapState.status === 'error') {
+            if (tweetTrapState.error && tweetTrapState.error.statusCode === 404) {
+                notFound = true
+            } else {
+                error = true
+            }
+        }
+
+        if (tweetTrapRepliesState.status === 'error') {
+            console.log(tweetTrapRepliesState.error)
+            if (tweetTrapRepliesState.error && tweetTrapRepliesState.error.statusCode === 404) {
+                notFound = true
+            } else {
+                error = true
+            }
+        }
+
+        if (notFound) {
+            enqueueSnackbar('Tweet not found')
+            history.push('/tweet-trap')
+        } else if (error) {
             enqueueSnackbar('There was an error while trying to fetch the tweet. Please, try again later.', {
                 variant: 'error',
                 persist: true,
@@ -385,7 +410,7 @@ const TweetTrapSelected = () => {
                           </>
                         }
                         {tweetTrapRepliesState.status === 'success' && !tweetTrapRepliesState.data.length &&
-                        <Box m={2}>No replies yet</Box>
+                        <Box m={2} style={{ opacity: 0.6 }}>You have no new replies</Box>
                         }
                     </List>
                 </Card>

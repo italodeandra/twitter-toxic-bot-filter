@@ -170,7 +170,7 @@ const TweetTrap = () => {
                         </>
                       }
                       {lastTweetTrapsState.status === 'success' && !lastTweetTrapsState.data.length &&
-                      <Box m={2}>No traps yet</Box>
+                      <Box m={2} style={{ opacity: 0.6 }}>You have no tweet traps</Box>
                       }
                   </List>
               </Card>

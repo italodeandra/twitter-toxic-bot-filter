@@ -96,7 +96,7 @@ const TweetTrapSelectedMuteByBotScoreDialog: FunctionComponent<Props> = ({
           disableHoverListener={botScoreState.status === 'success' || [ tweetTrapRepliesState.status, botScoreState.status ].includes('loading')}
           disableTouchListener={botScoreState.status === 'success' || [ tweetTrapRepliesState.status, botScoreState.status ].includes('loading')}
           disableFocusListener={botScoreState.status === 'success' || [ tweetTrapRepliesState.status, botScoreState.status ].includes('loading')}
-          title={`You need to first scan ${selectedNames.length ? `the ${selectedNames.length} selected` : 'the'} profile${selectedNames.length !== 1 ? 's' : ''}`}>
+          title={`You need to first scan ${selectedNames.length ? `the ${selectedNames.length} selected` : 'the'} bot score${selectedNames.length !== 1 ? 's' : ''}`}>
             <span className={classes.buttonSpacing}>
                 <Button
                   variant="contained"

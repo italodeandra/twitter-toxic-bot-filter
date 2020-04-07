@@ -1,7 +1,7 @@
 export type State =
   | { status: 'empty' }
   | { status: 'loading' }
-  | { status: 'error', error: string }
+  | { status: 'error', error: any }
   | { status: 'success', data: HNResponse }
 
 type HNResponse = any
