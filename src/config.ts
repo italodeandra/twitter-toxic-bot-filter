@@ -14,8 +14,6 @@ const config: any = {
 }
 
 export default {
-    twitterConsumerApiKey: process.env.REACT_APP_CONSUMER_API_KEY || 'kCkSebfJEIEx5ZPo7I7yJPub5',
-    twitterConsumerApiSecretKey: process.env.REACT_APP_CONSUMER_API_SECRET_KEY || '3coFZCfs1mjzBICWuO20NwsLEgnkYqSOTPQDTmUQPBTnd0LYYA',
     twitterAuthenticateUrl: (oauthToken: string) => `https://api.twitter.com/oauth/authenticate?oauth_token=${oauthToken}`,
     ...config[process.env.REACT_APP_ENV || 'development']
 }
