@@ -6,7 +6,7 @@ const config: any = {
         apiHost: 'https://twitter-toxic-bot-filter-api-staging.italodeandra.de',
     },
     development: {
-        apiHost: 'http://192.168.17.103:3001',
+        apiHost: 'http://localhost:3001',
     }
 }
 

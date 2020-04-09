@@ -45,7 +45,7 @@ import BotScore from '../../../api/botScore/BotScore'
 import TweetTrapSelectedMuteByBotScoreDialog
     from './MuteDialogs/MuteByBotScoreDialog/TweetTrapSelectedMuteByBotScoreDialog'
 import TweetTrapSelectedMuteConfirmDialog from './MuteDialogs/MuteConfirmDialog/TweetTrapSelectedMuteConfirmDialog'
-import { useDeepCompareEffect, useKey } from 'react-use'
+import { useDeepCompareEffect } from 'react-use'
 import useTitle from '../../../hooks/useTitle'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -196,15 +196,15 @@ const TweetTrapSelected = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ botScoreState.status ])
 
-    useKey('a', () => {
-        console.log('a')
-
-        botScoreState.status = 'success'
-        if (botScoreState.status === 'success') {
-            botScoreState.data = [ { 'name': 'FilterToxic', 'score': 0.5778300973814038 } ]
-        }
-        manualUpdateTweetTrapReplies(tweetTrapRepliesDataRef.current)
-    })
+    // useKey('a', () => {
+    //     console.log('a')
+    //
+    //     botScoreState.status = 'success'
+    //     if (botScoreState.status === 'success') {
+    //         botScoreState.data = [ { 'name': 'FilterToxic', 'score': 0.5778300973814038 } ]
+    //     }
+    //     manualUpdateTweetTrapReplies(tweetTrapRepliesDataRef.current)
+    // })
 
     function handleTweetClick(t: ETweetTrap) {
         let updatedSelectedNames = [ ...selectedNames ]
