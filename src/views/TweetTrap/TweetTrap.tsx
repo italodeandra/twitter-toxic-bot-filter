@@ -70,16 +70,28 @@ const TweetTrap = () => {
         if (tweetTheTweetTrapState.status === 'success') {
             history.push(`/tweet-trap/${tweetTheTweetTrapState.data.id}`)
         } else if (tweetTheTweetTrapState.status === 'error') {
-            enqueueSnackbar('There was an error while trying to tweet. Please, try again later.', {
-                variant: 'error',
-                persist: true,
-                action: key => (
-                  <Button onClick={() => closeSnackbar(key)} color="inherit">
-                      Okay
-                  </Button>
-                )
-            })
-            console.error(tweetTheTweetTrapState)
+            if (tweetTheTweetTrapState.error.statusCode === 409) {
+                enqueueSnackbar(tweetTheTweetTrapState.error.message, {
+                    variant: 'error',
+                    persist: true,
+                    action: key => (
+                      <Button onClick={() => closeSnackbar(key)} color="inherit">
+                          Okay
+                      </Button>
+                    )
+                })
+            } else {
+                enqueueSnackbar('There was an error while trying to tweet. Please, try again later.', {
+                    variant: 'error',
+                    persist: true,
+                    action: key => (
+                      <Button onClick={() => closeSnackbar(key)} color="inherit">
+                          Okay
+                      </Button>
+                    )
+                })
+                console.error(tweetTheTweetTrapState)
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ tweetTheTweetTrapState.status ])
