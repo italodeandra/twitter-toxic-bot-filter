@@ -48,6 +48,8 @@ import TweetTrapSelectedMuteConfirmDialog from './MuteDialogs/MuteConfirmDialog/
 import { useDeepCompareEffect } from 'react-use'
 import useTitle from '../../../hooks/useTitle'
 
+const BIGINT_MAX = 9223372036854775807
+
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
@@ -98,8 +100,15 @@ const TweetTrapSelected = () => {
     })
 
     useEffect(() => {
-        getTweetTrap(route.params.id)
-        getTweetTrapReplies(route.params.id)
+        const { id } = route.params
+        if (+id > BIGINT_MAX) {
+            enqueueSnackbar('Tweet not found')
+            history.push('/tweet-trap')
+            return
+        }
+
+        getTweetTrap(id)
+        getTweetTrapReplies(id)
 
         function handleNewTweetTrapReply(newTweetTrap: ETweetTrap) {
             manualUpdateTweetTrapReplies([
@@ -109,10 +118,10 @@ const TweetTrapSelected = () => {
         }
 
         if ((socket as any).authenticated) {
-            socket.emit('subscribeTweetTrapReplies', route.params.id)
+            socket.emit('subscribeTweetTrapReplies', id)
         } else {
             socket.on('authenticated', () => {
-                socket.emit('subscribeTweetTrapReplies', route.params.id)
+                socket.emit('subscribeTweetTrapReplies', id)
             })
         }
 
