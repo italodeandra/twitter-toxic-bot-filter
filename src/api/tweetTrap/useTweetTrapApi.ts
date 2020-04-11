@@ -1,9 +1,8 @@
 import { useReducer } from 'react'
 import apiReducer, { State } from '../apiReducer'
-import fetch from 'cross-fetch'
-import config from '../../config'
 import { useUser } from '../../store/reducers/user/userReducer'
 import TweetTrap from './TweetTrap'
+import apiFetch from '../apiFetch'
 
 type TweetTrapApi = [ State, {
     tweet(tweetTrap: TweetTrap): void
@@ -20,95 +19,50 @@ export default function useTweetTrapApi(initialState: State = { status: 'empty' 
     function tweet(tweetTrap: TweetTrap) {
         dispatch({ type: 'request' })
 
-        fetch(`${config.apiHost}/tweet-trap`, {
+        apiFetch(`/tweet-trap`, {
             method: 'post',
-            headers: {
-                'Content-type': 'application/json',
-                'Authorization': 'Bearer ' + btoa(JSON.stringify(user))
-            },
-            body: JSON.stringify(tweetTrap)
+            token: user!.token,
+            body: tweetTrap
         })
-          .then(res => {
-              if (res.ok) {
-                  return res.json()
-              } else {
-                  throw res.json()
-              }
-          })
-          .then(
-            (data) => dispatch({ type: 'success', results: data }),
-            (errorP) => errorP.then((error: any) => dispatch({ type: 'failure', error }))
-          )
+          .then(data => dispatch({ type: 'success', data }))
+          .catch(error => dispatch({ type: 'failure', error }))
     }
 
     function get(id: string) {
         dispatch({ type: 'request' })
 
-        fetch(`${config.apiHost}/tweet-trap/${id}`, {
+        apiFetch(`/tweet-trap/${id}`, {
             method: 'get',
-            headers: {
-                'Authorization': 'Bearer ' + btoa(JSON.stringify(user))
-            }
+            token: user!.token
         })
-          .then(res => {
-              if (res.ok) {
-                  return res.json()
-              } else {
-                  throw res.json()
-              }
-          })
-          .then(
-            (data) => dispatch({ type: 'success', results: data }),
-            (errorP) => errorP.then((error: any) => dispatch({ type: 'failure', error }))
-          )
+          .then(data => dispatch({ type: 'success', data }))
+          .catch(error => dispatch({ type: 'failure', error }))
     }
 
     function list() {
         dispatch({ type: 'request' })
 
-        fetch(`${config.apiHost}/tweet-trap`, {
+        apiFetch(`/tweet-trap`, {
             method: 'get',
-            headers: {
-                'Authorization': 'Bearer ' + btoa(JSON.stringify(user))
-            }
+            token: user!.token
         })
-          .then(res => {
-              if (res.ok) {
-                  return res.json()
-              } else {
-                  throw res.json()
-              }
-          })
-          .then(
-            (data) => dispatch({ type: 'success', results: data }),
-            (errorP) => errorP.then((error: any) => dispatch({ type: 'failure', error }))
-          )
+          .then(data => dispatch({ type: 'success', data }))
+          .catch(error => dispatch({ type: 'failure', error }))
     }
 
     function getReplies(id: string) {
         dispatch({ type: 'request' })
 
-        fetch(`${config.apiHost}/tweet-trap/${id}/replies`, {
+        apiFetch(`/tweet-trap/${id}/replies`, {
             method: 'get',
-            headers: {
-                'Authorization': 'Bearer ' + btoa(JSON.stringify(user))
-            }
+            token: user!.token
         })
-          .then(res => {
-              if (res.ok) {
-                  return res.json()
-              } else {
-                  throw res.json()
-              }
-          })
-          .then(
-            (data) => dispatch({ type: 'success', results: data }),
-            (errorP) => errorP.then((error: any) => dispatch({ type: 'failure', error }))
-          )
+          .then(data => dispatch({ type: 'success', data }))
+          .catch(error => dispatch({ type: 'failure', error }))
     }
 
     function manualUpdateData(data: any) {
-        dispatch({ type: 'success', results: data })
+        dispatch({ type: 'success', data: data })
     }
 
     return [ state, { tweet, get, list, getReplies, manualUpdateData } ]
