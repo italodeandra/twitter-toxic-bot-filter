@@ -104,7 +104,7 @@ const TweetTrapSelectedMuteByBotScoreDialog: FunctionComponent<Props> = ({
                   color={botScoreState.status === 'success' ? 'primary' : undefined}
                   type="submit"
                   onClick={botScoreState.status === 'success' ? handleMuteClick : undefined}
-                  disabled={[ tweetTrapRepliesState.status, botScoreState.status ].includes('loading')}
+                  disabled={tweetTrapRepliesState.status !== 'success' || [ tweetTrapRepliesState.status, botScoreState.status ].includes('loading')}
                 >Mute by bot score</Button>
             </span>
         </Tooltip>

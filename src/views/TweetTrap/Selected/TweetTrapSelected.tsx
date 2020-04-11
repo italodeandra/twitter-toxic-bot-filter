@@ -145,7 +145,7 @@ const TweetTrapSelected = () => {
             if (tweetTrapState.error && tweetTrapState.error.statusCode === 404) {
                 notFound = true
             } else {
-                error = true
+                error = tweetTrapState.error.message
             }
         }
 
@@ -154,7 +154,7 @@ const TweetTrapSelected = () => {
             if (tweetTrapRepliesState.error && tweetTrapRepliesState.error.statusCode === 404) {
                 notFound = true
             } else {
-                error = true
+                error = tweetTrapRepliesState.error.message
             }
         }
 
@@ -162,7 +162,7 @@ const TweetTrapSelected = () => {
             enqueueSnackbar('Tweet not found')
             history.push('/tweet-trap')
         } else if (error) {
-            enqueueSnackbar('There was an error while trying to fetch the tweet. Please, try again later.', {
+            enqueueSnackbar(error, {
                 variant: 'error',
                 persist: true,
                 action: key => (
@@ -256,6 +256,11 @@ const TweetTrapSelected = () => {
         })
     }
 
+    function retryGetReplies() {
+        const { id } = route.params
+        getTweetTrapReplies(id)
+    }
+
     return (<>
         {[ tweetTrapState.status, botScoreState.status ].includes('loading') &&
         <LinearProgress className={classes.linearLoading} />
@@ -301,7 +306,7 @@ const TweetTrapSelected = () => {
                   disableElevation
                   color="primary"
                   type="submit"
-                  disabled={![ tweetTrapState.status, tweetTrapRepliesState.status ].includes('success') || botScoreState.status === 'loading'}
+                  disabled={tweetTrapState.status !== 'success' || tweetTrapRepliesState.status !== 'success' || botScoreState.status === 'loading'}
                   className={classes.buttonSpacing}
                   onClick={handleScanBotScoreClick}
                 >Scan {selectedNames.length || 'all'} bot score</Button>
@@ -421,6 +426,16 @@ const TweetTrapSelected = () => {
                         {tweetTrapRepliesState.status === 'success' && !tweetTrapRepliesState.data.length &&
                         <Box m={2} style={{ opacity: 0.6 }}>You have no new replies</Box>
                         }
+                        {tweetTrapRepliesState.status === 'error' && <>
+                            <Box m={2} style={{ opacity: 0.6 }}>
+                                {tweetTrapRepliesState.error.message}
+                                <Button
+                                  style={{ marginLeft: theme.spacing(1) }}
+                                  size="small"
+                                  onClick={retryGetReplies}
+                                >Try again</Button>
+                            </Box>
+                        </>}
                     </List>
                 </Card>
             </Box>

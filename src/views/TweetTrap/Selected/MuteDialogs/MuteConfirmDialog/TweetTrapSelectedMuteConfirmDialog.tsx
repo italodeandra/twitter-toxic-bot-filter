@@ -47,7 +47,7 @@ const TweetTrapSelectedMuteConfirmDialog: FunctionComponent<Props> = ({
           disableElevation
           color="primary"
           type="submit"
-          disabled={![ tweetTrapState.status, tweetTrapRepliesState.status ].includes('success') || muteState.status === 'loading'}
+          disabled={tweetTrapState.status !== 'success' || tweetTrapRepliesState.status !== 'success' || muteState.status === 'loading'}
           className={classes.buttonSpacing}
           onClick={handleMuteClick}
         >Mute {selectedNames.length || 'all'}</Button>
