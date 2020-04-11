@@ -149,7 +149,9 @@ const AppAppBar: FunctionComponent<Props> = ({
 
     useEffect(() => {
         if (authFinishState.status === 'success') {
-            userDispatch(updateUser(authFinishState.data))
+            const { user, token } = authFinishState.data
+            user.token = token
+            userDispatch(updateUser(user))
         } else if (authFinishState.status === 'error') {
             enqueueSnackbar('There was an error while trying to sign in with Twitter. Please, try again later.', {
                 variant: 'error',

@@ -7,6 +7,8 @@ export type User = {
 
     name?: string
     profileImageUrl?: string
+
+    token?: string
 }
 
 export type NullableUser = User | null
