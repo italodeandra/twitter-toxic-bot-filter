@@ -22,11 +22,10 @@ import {
     TextField,
     Theme,
     Tooltip,
-    Typography,
-    useTheme
+    Typography
 } from '@material-ui/core'
 import React, { useEffect, useRef, useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useTweetTrapApi from '../../../api/tweetTrap/useTweetTrapApi'
 import { useSnackbar } from 'notistack'
 import { Link as RouterLink, useHistory, useRouteMatch } from 'react-router-dom'

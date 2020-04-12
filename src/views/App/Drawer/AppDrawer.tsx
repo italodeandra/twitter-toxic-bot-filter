@@ -9,11 +9,10 @@ import {
     SwipeableDrawer,
     Tooltip,
     Typography,
-    useTheme
 } from '@material-ui/core'
 import React, { FunctionComponent, ReactElement, ReactNode, useState } from 'react'
 import useScrollVisible from '../../../hooks/useScrollVisible'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import { drawerWidth } from '../App'
 import clsx from 'clsx'
 import MenuButton from '../MenuButton/MenuButton'

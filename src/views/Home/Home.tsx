@@ -5,9 +5,7 @@ import {
     Container,
     TextField,
     Theme,
-    Typography,
-    useTheme,
-    withStyles
+    Typography
 } from '@material-ui/core'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useUser } from '../../store/reducers/user/userReducer'
@@ -22,7 +20,7 @@ import {
     SentimentVerySatisfied as SentimentVerySatisfiedIcon,
     TrackChangesRounded as TrackChangesRoundedIcon
 } from '@material-ui/icons'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles'
 import { useMount } from 'react-use'
 import useFeedbackApi from '../../api/feedback/useFeedbackApi'
 import { Link } from 'react-router-dom'

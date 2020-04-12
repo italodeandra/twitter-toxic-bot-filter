@@ -1,9 +1,10 @@
-import { Button, useTheme } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import useMuteApi from '../../../../api/mute/useMuteApi'
 import { useSnackbar } from 'notistack'
 import { Theme } from '@material-ui/core/styles/createMuiTheme'
 import { State } from '../../../../api/apiReducer'
+import { useTheme } from '@material-ui/core/styles'
 
 export default function useMuteCustomHook(getTweetTrapReplies: () => void): [
     Theme, () => void, () => void, (names: string[]) => void, boolean, State

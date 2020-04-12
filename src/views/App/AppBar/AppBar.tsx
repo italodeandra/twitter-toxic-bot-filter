@@ -8,10 +8,9 @@ import {
     Toolbar,
     Typography,
     useScrollTrigger,
-    useTheme
 } from '@material-ui/core'
 import { Twitter as TwitterIcon } from '@material-ui/icons'
-import { makeStyles, Theme } from '@material-ui/core/styles'
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import { drawerWidth } from '../App'
 import MenuButton from '../MenuButton/MenuButton'
 import { useUser } from '../../../store/reducers/user/userReducer'

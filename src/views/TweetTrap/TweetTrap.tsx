@@ -11,14 +11,11 @@ import {
     ListItemAvatar,
     ListItemText,
     ListSubheader,
-    TextField,
-    Theme,
     Typography,
-    useMediaQuery,
-    useTheme
+    useMediaQuery
 } from '@material-ui/core'
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useEffect } from 'react'
+import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import useTweetTrapApi from '../../api/tweetTrap/useTweetTrapApi'
 import { useSnackbar } from 'notistack'
 import { Link, useHistory } from 'react-router-dom'

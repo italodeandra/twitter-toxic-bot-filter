@@ -29,12 +29,11 @@
   },
   "scripts": {
     "start": "node serve",
-    "dev": "react-scripts start",
+    "dev": "react-app-rewired start",
     "build": "npm run build:staging && npm run build:production",
-    "build:staging": "REACT_APP_ENV=staging react-scripts build && rm -rf build-staging && mv build build-staging",
-    "build:production": "REACT_APP_ENV=production GENERATE_SOURCEMAP=false react-scripts build && rm -rf build-production && mv build build-production",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build:staging": "REACT_APP_ENV=staging react-app-rewired build && rm -rf build-staging && mv build build-staging",
+    "build:production": "REACT_APP_ENV=production GENERATE_SOURCEMAP=false react-app-rewired build && rm -rf build-production && mv build build-production",
+    "test": "react-app-rewired test"
   },
   "eslintConfig": {
     "extends": "react-app"
