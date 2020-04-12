@@ -24,6 +24,8 @@ import { useMount } from 'react-use'
 import { default as ETweetTrap } from '../../api/tweetTrap/TweetTrap'
 import moment from 'moment'
 import useTitle from '../../hooks/useTitle'
+import { Field, Form, Formik } from 'formik'
+import { TextField } from 'formik-material-ui'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -40,7 +42,6 @@ const TweetTrap = () => {
     useTitle('Tweet trap')
     const classes = useStyles()
     const theme = useTheme()
-    const [ tweetText, setTweetText ] = useState('')
     const [ tweetTheTweetTrapState, { tweet: tweetTheTweetTrap } ] = useTweetTrapApi()
     const [ lastTweetTrapsState, { list: listLastTweetTraps } ] = useTweetTrapApi({ status: 'loading' })
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -50,18 +51,6 @@ const TweetTrap = () => {
     useMount(() => {
         listLastTweetTraps()
     })
-
-    function handleTweetTextChange(event: ChangeEvent<HTMLTextAreaElement>) {
-        setTweetText(event.target.value)
-    }
-
-    function handleTweetSubmit(event: FormEvent) {
-        event.preventDefault()
-
-        tweetTheTweetTrap({
-            text: tweetText
-        })
-    }
 
     useEffect(() => {
         if (tweetTheTweetTrapState.status === 'success') {
@@ -99,35 +88,63 @@ const TweetTrap = () => {
               <Typography paragraph variant="subtitle2">
                   Tweet something that will trigger the toxic bots (or even some unwanted toxic followers)
               </Typography>
-              <form onSubmit={handleTweetSubmit}>
-                  <TextField
-                    label="Message"
-                    variant="filled"
-                    fullWidth
-                    multiline
-                    rowsMax={40}
-                    onChange={handleTweetTextChange}
-                    value={tweetText}
-                    error={tweetText.length > 280}
-                    helperText={tweetText.length > 280 ? tweetText.length + '/280' : undefined}
-                    disabled={tweetTheTweetTrapState.status === 'loading'}
-                  />
-                  <Box my={2} display="flex" alignItems="center">
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        color="primary"
-                        type="submit"
-                        disabled={tweetText.length > 280 || tweetTheTweetTrapState.status === 'loading'}
-                        size={isMobile ? 'large' : undefined}
-                        fullWidth={isMobile}
-                      >Tweet</Button>
+              <Formik
+                initialValues={{
+                    message: ''
+                }}
+                validate={values => {
+                    const errors: Partial<{
+                        message: string
+                    }> = {}
+                    if (!values.message) {
+                        errors.message = 'The message is required'
+                    } else if (values.message.length > 280) {
+                        errors.message = values.message.length + '/280'
+                    }
+                    return errors
+                }}
+                onSubmit={(values) => {
+                    tweetTheTweetTrap({
+                        text: values.message
+                    })
+                }}
+              >
+                  {({ submitForm, values }) => (
+                    <Form>
+                        <Field
+                          component={TextField}
+                          name="message"
+                          type="text"
+                          label="Message"
 
-                      {tweetTheTweetTrapState.status === 'loading' &&
-                      <CircularProgress size={theme.spacing(3)} style={{ marginLeft: theme.spacing(2) }} />
-                      }
-                  </Box>
-              </form>
+                          helperText={<Box display="flex"
+                                           justifyContent="flex-end">{values.message.length + '/280'}</Box>}
+                          variant="filled"
+                          fullWidth
+                          multiline
+                          rowsMax={40}
+                          disabled={tweetTheTweetTrapState.status === 'loading'}
+                          touchOnChange
+                        />
+                        <Box my={2} display="flex" alignItems="center">
+                            <Button
+                              variant="contained"
+                              disableElevation
+                              color="primary"
+                              type="submit"
+                              disabled={tweetTheTweetTrapState.status === 'loading'}
+                              size={isMobile ? 'large' : undefined}
+                              fullWidth={isMobile}
+                              onClick={submitForm}
+                            >Tweet</Button>
+
+                            {tweetTheTweetTrapState.status === 'loading' &&
+                            <CircularProgress size={theme.spacing(3)} style={{ marginLeft: theme.spacing(2) }} />
+                            }
+                        </Box>
+                    </Form>
+                  )}
+              </Formik>
           </Box>
 
           <Box>
