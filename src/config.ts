@@ -12,5 +12,5 @@ const config: any = {
 
 export default {
     twitterAuthenticateUrl: (oauthToken: string) => `https://api.twitter.com/oauth/authenticate?oauth_token=${oauthToken}`,
-    ...config[process.env.NODE_ENV || 'development']
+    ...config[process.env.REACT_APP_ENV || 'development']
 }

@@ -30,13 +30,14 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "node serve",
-    "dev": "react-app-rewired start",
+    "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "xstart": "node serve",
+    "xdev": "react-app-rewired start",
     "xbuild": "npm run build:staging && npm run build:production",
     "xbuild:staging": "REACT_APP_ENV=staging react-app-rewired build && rm -rf build-staging && mv build build-staging",
-    "xbuild:production": "REACT_APP_ENV=production GENERATE_SOURCEMAP=false react-app-rewired build && rm -rf build-production && mv build build-production",
-    "test": "react-app-rewired test"
+    "xbuild:production": "REACT_APP_ENV=production GENERATE_SOURCEMAP=false react-app-rewired build && rm -rf build-production && mv build build-production"
   },
   "eslintConfig": {
     "extends": "react-app"
