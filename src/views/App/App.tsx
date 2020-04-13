@@ -21,6 +21,8 @@ import useSocket from '../../hooks/useSocket'
 import NotFound from '../NotFound/NotFound'
 import useAuthApi from '../../api/auth/useAuthApi'
 import { removeUser, updateUser } from '../../store/reducers/user/userActions'
+import Terms from '../Terms/Terms'
+import Privacy from '../Privacy/Privacy'
 
 export const drawerWidth = 240
 
@@ -150,6 +152,8 @@ function AppWithProviders() {
                         <Redirect to="/" />}</Route>
                       <Route path="/tweet-trap/:id">{isSignedIn ? <TweetTrapSelected /> :
                         <Redirect to="/" />}</Route>
+                      <Route path="/terms"><Terms /></Route>
+                      <Route path="/privacy"><Privacy /></Route>
                       <Route path="**"><NotFound /></Route>
                   </Switch>
               </main>
