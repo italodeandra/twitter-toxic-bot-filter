@@ -9,6 +9,7 @@ import {
     CircularProgress,
     Container,
     Divider,
+    Fade,
     Hidden,
     IconButton,
     LinearProgress,
@@ -324,7 +325,9 @@ const TweetTrapSelected = () => {
 
                 <Hidden smDown>
                     {[ botScoreState.status ].includes('loading') &&
-                    <CircularProgress size={theme.spacing(3)} style={{ marginLeft: theme.spacing(2) }} />
+                    <Fade in timeout={{ enter: 1000 }}>
+                        <CircularProgress size={theme.spacing(3)} style={{ marginLeft: theme.spacing(2) }} />
+                    </Fade>
                     }
                 </Hidden>
             </Box>

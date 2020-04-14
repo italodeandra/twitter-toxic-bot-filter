@@ -1,12 +1,4 @@
-import {
-    Box,
-    Button,
-    CircularProgress,
-    Container,
-    TextField,
-    Theme,
-    Typography
-} from '@material-ui/core'
+import { Box, Button, CircularProgress, Container, Fade, TextField, Theme, Typography } from '@material-ui/core'
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useUser } from '../../store/reducers/user/userReducer'
 import moment from 'moment'
@@ -186,7 +178,12 @@ const Home = () => {
                               >Send</Button>
 
                               {feedbackState.status === 'loading' &&
-                              <CircularProgress size={theme.spacing(3)} style={{ marginLeft: theme.spacing(2) }} />
+                              <Fade in timeout={{ enter: 1000 }}>
+                                  <CircularProgress
+                                    size={theme.spacing(3)}
+                                    style={{ marginLeft: theme.spacing(2) }}
+                                  />
+                              </Fade>
                               }
                           </Box>
                       </form>
