@@ -1,10 +1,13 @@
 import React, { FunctionComponent } from 'react'
 import { UserProvider } from './reducers/user/userReducer'
+import { SharedHealthCheckApiProvider } from './reducers/healthCheckApi/healthCheckApiReducer'
 
 const Store: FunctionComponent = ({ children }) => {
     return (
       <UserProvider>
-          {children}
+          <SharedHealthCheckApiProvider>
+              {children}
+          </SharedHealthCheckApiProvider>
       </UserProvider>
     )
 }

@@ -1,6 +1,7 @@
 import { useReducer } from 'react'
 import apiReducer, { State } from '../apiReducer'
 import apiFetch from '../apiFetch'
+import { useMountedState } from 'react-use'
 
 type AuthApi = [ State, {
     start(): void
@@ -10,6 +11,7 @@ type AuthApi = [ State, {
 
 export default function useAuthApi(): AuthApi {
     const [ state, dispatch ] = useReducer(apiReducer, { status: 'empty' })
+    const isMounted = useMountedState()
 
     function start() {
         dispatch({ type: 'request' })
@@ -17,8 +19,8 @@ export default function useAuthApi(): AuthApi {
         apiFetch(`/user/auth-start`, {
             method: 'post'
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     function finish(oauthToken: string, oauthTokenSecret: string, oauthVerifier: string) {
@@ -32,8 +34,8 @@ export default function useAuthApi(): AuthApi {
                 oauthVerifier
             }
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     function verify(token: string) {
@@ -43,8 +45,8 @@ export default function useAuthApi(): AuthApi {
             method: 'get',
             token
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     return [ state, { start, finish, verify } ]

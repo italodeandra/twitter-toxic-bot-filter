@@ -1,6 +1,5 @@
 import React from 'react'
 import useTitle from '../../hooks/useTitle'
-import johnTravolta from './john-travolta.gif'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -17,7 +16,7 @@ const NotFound = () => {
     const classes = useStyles()
 
     return (
-      <img className={classes.john} src={johnTravolta} alt="John Travolta's confused gif" />
+      <img className={classes.john} src={'/assets/john-travolta.gif'} alt="John Travolta's confused gif" />
     )
 }
 

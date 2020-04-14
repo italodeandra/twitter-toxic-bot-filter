@@ -26,6 +26,7 @@ import moment from 'moment'
 import useTitle from '../../hooks/useTitle'
 import { Field, Form, Formik } from 'formik'
 import { TextField } from 'formik-material-ui'
+import useHealthCheckApi from '../../api/healthCheck/useHealthCheckApi'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -47,10 +48,18 @@ const TweetTrap = () => {
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
     const history = useHistory()
     const isMobile = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true })
+    const [ , ping ] = useHealthCheckApi()
 
     useMount(() => {
         listLastTweetTraps()
     })
+
+    useEffect(() => {
+        if (lastTweetTrapsState.status === 'error' && lastTweetTrapsState.error.message === 'Failed to fetch') {
+            ping()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ lastTweetTrapsState.status ])
 
     useEffect(() => {
         if (tweetTheTweetTrapState.status === 'success') {
@@ -118,7 +127,8 @@ const TweetTrap = () => {
                           label="Message"
 
                           helperText={<Box display="flex"
-                                           justifyContent="flex-end">{values.message.length + '/280'}</Box>}
+                                           justifyContent="flex-end"
+                                           component='span'>{values.message.length + '/280'}</Box>}
                           variant="filled"
                           fullWidth
                           multiline
