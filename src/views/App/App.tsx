@@ -120,7 +120,8 @@ function AppWithProviders() {
         } else if (authVerifyState.status === 'error') {
             if (authVerifyState.error.statusCode === 401) {
                 userDispatch(removeUser())
-            } else if (authVerifyState.error.message !== 'Failed to fetch') {
+            }
+            if (authVerifyState.error.message !== 'Failed to fetch') {
                 enqueueSnackbar(authVerifyState.error.message, {
                     variant: 'error',
                     persist: true,
