@@ -248,11 +248,16 @@ const TweetTrapSelected = () => {
     }
 
     function handleScanBotScoreClick() {
-        getBotScores(getNames())
+        const names = getNames()
+        if (names.length) {
+            getBotScores(getNames())
 
-        enqueueSnackbar('The scan for the bot score started. It might take some time depending on the amount of profiles being scanned.', {
-            autoHideDuration: 10000
-        })
+            enqueueSnackbar('The scan for the bot score started. It might take some time depending on the amount of profiles being scanned.', {
+                autoHideDuration: 10000
+            })
+        } else {
+            enqueueSnackbar('There is none to be scanned')
+        }
     }
 
     function retryGetReplies() {

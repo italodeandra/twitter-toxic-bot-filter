@@ -17,7 +17,7 @@ export default function useBotScoreApi(initialState: State = { status: 'empty' }
         dispatch({ type: 'request' })
 
         apiFetch(`/bot-score?names=${names.join(',')}`, {
-            method: 'post',
+            method: 'get',
             token: user!.token
         })
           .then(data => isMounted() && dispatch({ type: 'success', data }))
