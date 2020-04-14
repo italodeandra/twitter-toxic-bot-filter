@@ -3,6 +3,7 @@ import apiReducer, { State } from '../apiReducer'
 import { useUser } from '../../store/reducers/user/userReducer'
 import TweetTrap from './TweetTrap'
 import apiFetch from '../apiFetch'
+import { useMountedState } from 'react-use'
 
 type TweetTrapApi = [ State, {
     tweet(tweetTrap: TweetTrap): void
@@ -15,6 +16,7 @@ type TweetTrapApi = [ State, {
 export default function useTweetTrapApi(initialState: State = { status: 'empty' }): TweetTrapApi {
     const [ user ] = useUser()
     const [ state, dispatch ] = useReducer(apiReducer, initialState)
+    const isMounted = useMountedState()
 
     function tweet(tweetTrap: TweetTrap) {
         dispatch({ type: 'request' })
@@ -24,8 +26,8 @@ export default function useTweetTrapApi(initialState: State = { status: 'empty' 
             token: user!.token,
             body: tweetTrap
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     function get(id: string) {
@@ -35,8 +37,8 @@ export default function useTweetTrapApi(initialState: State = { status: 'empty' 
             method: 'get',
             token: user!.token
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     function list() {
@@ -46,8 +48,8 @@ export default function useTweetTrapApi(initialState: State = { status: 'empty' 
             method: 'get',
             token: user!.token
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     function getReplies(id: string) {
@@ -57,8 +59,8 @@ export default function useTweetTrapApi(initialState: State = { status: 'empty' 
             method: 'get',
             token: user!.token
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     function manualUpdateData(data: any) {

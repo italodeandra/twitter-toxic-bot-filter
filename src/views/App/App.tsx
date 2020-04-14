@@ -3,7 +3,7 @@ import { createMuiTheme, makeStyles, Theme, ThemeProvider, useTheme } from '@mat
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom'
 import Welcome from '../Welcome/Welcome'
 import { lightBlue } from '@material-ui/core/colors'
-import { Button, CssBaseline, useMediaQuery } from '@material-ui/core'
+import { Box, Button, CircularProgress, CssBaseline, Fade, useMediaQuery } from '@material-ui/core'
 import {
     HomeRounded as HomeRoundedIcon,
     PolicyRounded as PolicyRoundedIcon,
@@ -23,6 +23,8 @@ import useAuthApi from '../../api/auth/useAuthApi'
 import { removeUser, updateUser } from '../../store/reducers/user/userActions'
 import Terms from '../Terms/Terms'
 import Privacy from '../Privacy/Privacy'
+import ServerDown from '../ServerDown/ServerDown'
+import useHealthCheckApi from '../../api/healthCheck/useHealthCheckApi'
 
 export const drawerWidth = 240
 
@@ -42,8 +44,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 
     content: {
-        flexGrow: 1,
-        // padding: theme.spacing(3),
+        flexGrow: 1
+    },
+    loading: {
+        height: theme.spacing(18),
+        '&': {
+            height: 'calc(100vh - ' + toolbarStyles(theme).minHeight.replace(' !important', '') + ')',
+        },
+        color: theme.palette.grey['400']
     },
 }))
 
@@ -61,8 +69,12 @@ function AppWithProviders() {
     const isSignedIn = !!user
     const [ authVerifyState, { verify: authVerify } ] = useAuthApi()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+    const [ healthCheckState, ping ] = useHealthCheckApi()
+    const isServerDown = (healthCheckState.status === 'error')
 
     useMount(() => {
+        ping()
+
         if (isSignedIn) {
             authVerify(user!.token!)
         }
@@ -108,16 +120,17 @@ function AppWithProviders() {
         } else if (authVerifyState.status === 'error') {
             if (authVerifyState.error.statusCode === 401) {
                 userDispatch(removeUser())
+            } else if (authVerifyState.error.message !== 'Failed to fetch') {
+                enqueueSnackbar(authVerifyState.error.message, {
+                    variant: 'error',
+                    persist: true,
+                    action: key => (
+                      <Button onClick={() => closeSnackbar(key)} color="inherit">
+                          Okay
+                      </Button>
+                    )
+                })
             }
-            enqueueSnackbar(authVerifyState.error.message, {
-                variant: 'error',
-                persist: true,
-                action: key => (
-                  <Button onClick={() => closeSnackbar(key)} color="inherit">
-                      Okay
-                  </Button>
-                )
-            })
             console.error(authVerifyState)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,9 +138,8 @@ function AppWithProviders() {
 
     return (
       <div className={classes.root}>
-          <CssBaseline />
 
-          <Router>
+          {!isServerDown ? <>
               <AppAppBar
                 isMobile={isMobile}
                 open={open}
@@ -146,18 +158,27 @@ function AppWithProviders() {
 
               <main className={classes.content}>
                   <div className={classes.toolbar} />
-                  <Switch>
-                      <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
-                      <Route path="/tweet-trap" exact>{isSignedIn ? <TweetTrap /> :
-                        <Redirect to="/" />}</Route>
-                      <Route path="/tweet-trap/:id">{isSignedIn ? <TweetTrapSelected /> :
-                        <Redirect to="/" />}</Route>
-                      <Route path="/terms"><Terms /></Route>
-                      <Route path="/privacy"><Privacy /></Route>
-                      <Route path="**"><NotFound /></Route>
-                  </Switch>
+                  {healthCheckState.status === 'loading'
+                    ? <Box display="flex" justifyContent="center" alignItems="center" className={classes.loading}>
+                        <CircularProgress color='inherit' />
+                    </Box>
+                    : <Fade in>
+                        <div>
+                            <Switch>
+                                <Route path="/" exact>{isSignedIn ? <Home /> : <Welcome />}</Route>
+                                <Route path="/tweet-trap" exact>{isSignedIn ? <TweetTrap /> :
+                                  <Redirect to="/" />}</Route>
+                                <Route path="/tweet-trap/:id">{isSignedIn ? <TweetTrapSelected /> :
+                                  <Redirect to="/" />}</Route>
+                                <Route path="/terms"><Terms /></Route>
+                                <Route path="/privacy"><Privacy /></Route>
+                                <Route path="**"><NotFound /></Route>
+                            </Switch>
+                        </div>
+                    </Fade>
+                  }
               </main>
-          </Router>
+          </> : <ServerDown />}
       </div>
     )
 }
@@ -180,7 +201,13 @@ function App() {
     return (
       <ThemeProvider theme={theme}>
           <SnackbarProvider maxSnack={5}>
-              <AppWithProviders />
+              <>
+                  <CssBaseline />
+
+                  <Router>
+                      <AppWithProviders />
+                  </Router>
+              </>
           </SnackbarProvider>
       </ThemeProvider>
     )

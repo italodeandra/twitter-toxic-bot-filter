@@ -3,12 +3,14 @@ import apiReducer, { State } from '../apiReducer'
 import { useUser } from '../../store/reducers/user/userReducer'
 import Feedback from './Feedback'
 import apiFetch from '../apiFetch'
+import { useMountedState } from 'react-use'
 
 type FeedbackApi = [ State, (feedback: Feedback) => void ]
 
 export default function useFeedbackApi(): FeedbackApi {
     const [ user ] = useUser()
     const [ state, dispatch ] = useReducer(apiReducer, { status: 'empty' })
+    const isMounted = useMountedState()
 
     function save(feedback: Feedback) {
         dispatch({ type: 'request' })
@@ -18,8 +20,8 @@ export default function useFeedbackApi(): FeedbackApi {
             token: user!.token,
             body: feedback
         })
-          .then(data => dispatch({ type: 'success', data }))
-          .catch(error => dispatch({ type: 'failure', error }))
+          .then(data => isMounted() && dispatch({ type: 'success', data }))
+          .catch(error => isMounted() && dispatch({ type: 'failure', error }))
     }
 
     return [ state, save ]
