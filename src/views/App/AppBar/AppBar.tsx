@@ -1,14 +1,6 @@
 import React, { FunctionComponent, ReactElement, ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
-import {
-    AppBar,
-    Box,
-    Button,
-    CircularProgress,
-    Toolbar,
-    Typography,
-    useScrollTrigger,
-} from '@material-ui/core'
+import { AppBar, Box, Button, CircularProgress, Fade, Toolbar, Typography, useScrollTrigger, } from '@material-ui/core'
 import { Twitter as TwitterIcon } from '@material-ui/icons'
 import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
 import { drawerWidth } from '../App'
@@ -203,8 +195,13 @@ const AppAppBar: FunctionComponent<Props> = ({
                           <UserMenu />
                         ) : (<>
                             {[ authStartState.status, authFinishState.status ].includes('loading') &&
-                            <CircularProgress color="inherit" size={theme.spacing(3)}
-                                              style={{ marginRight: theme.spacing(2) }} />
+                            <Fade in timeout={{ enter: 1000 }}>
+                                <CircularProgress
+                                  color="inherit"
+                                  size={theme.spacing(3)}
+                                  style={{ marginRight: theme.spacing(2) }}
+                                />
+                            </Fade>
                             }
                             <Button
                               id="sign-in-button"

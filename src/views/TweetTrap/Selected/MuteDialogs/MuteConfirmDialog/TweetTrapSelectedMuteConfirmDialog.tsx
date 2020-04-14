@@ -6,6 +6,7 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Fade,
     Grow
 } from '@material-ui/core'
 import React, { FunctionComponent } from 'react'
@@ -61,7 +62,9 @@ const TweetTrapSelectedMuteConfirmDialog: FunctionComponent<Props> = ({
             </DialogContent>
             <DialogActions>
                 {muteState.status === 'loading'
-                  ? <CircularProgress size={theme.spacing(3)} style={{ marginRight: theme.spacing(2) }} />
+                  ? <Fade in timeout={{ enter: 1000 }}>
+                      <CircularProgress size={theme.spacing(3)} style={{ marginRight: theme.spacing(2) }} />
+                  </Fade>
                   : <Button onClick={handleDialogClose}>
                       Cancel
                   </Button>

@@ -6,6 +6,7 @@ import {
     CircularProgress,
     Container,
     Divider,
+    Fade,
     List,
     ListItem,
     ListItemAvatar,
@@ -149,7 +150,12 @@ const TweetTrap = () => {
                             >Tweet</Button>
 
                             {tweetTheTweetTrapState.status === 'loading' &&
-                            <CircularProgress size={theme.spacing(3)} style={{ marginLeft: theme.spacing(2) }} />
+                            <Fade in timeout={{ enter: 1000 }}>
+                                <CircularProgress
+                                  size={theme.spacing(3)}
+                                  style={{ marginLeft: theme.spacing(2) }}
+                                />
+                            </Fade>
                             }
                         </Box>
                     </Form>
