@@ -117,13 +117,7 @@ const TweetTrapSelected = () => {
             ])
         }
 
-        if ((socket as any).authenticated) {
-            socket.emit('subscribeTweetTrapReplies', id)
-        } else {
-            socket.on('authenticated', () => {
-                socket.emit('subscribeTweetTrapReplies', id)
-            })
-        }
+        socket.emit('subscribeTweetTrapReplies', id)
 
         socket.on('newTweetTrapReply', handleNewTweetTrapReply)
         socket.on('tweetTrapReplyAutoSync', setAutoSync)
@@ -139,7 +133,6 @@ const TweetTrapSelected = () => {
     useEffect(() => {
         let error = false
         let notFound = false
-
 
         if (tweetTrapState.status === 'error') {
             if (tweetTrapState.error && tweetTrapState.error.statusCode === 404) {
@@ -204,16 +197,6 @@ const TweetTrapSelected = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ botScoreState.status ])
-
-    // useKey('a', () => {
-    //     console.log('a')
-    //
-    //     botScoreState.status = 'success'
-    //     if (botScoreState.status === 'success') {
-    //         botScoreState.data = [ { 'name': 'FilterToxic', 'score': 0.5778300973814038 } ]
-    //     }
-    //     manualUpdateTweetTrapReplies(tweetTrapRepliesDataRef.current)
-    // })
 
     function handleTweetClick(t: ETweetTrap) {
         let updatedSelectedNames = [ ...selectedNames ]
