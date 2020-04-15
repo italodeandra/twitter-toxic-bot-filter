@@ -26,8 +26,6 @@ import ServerDown from '../ServerDown/ServerDown'
 import useHealthCheckApi from '../../api/healthCheck/useHealthCheckApi'
 import AppBar from './AppBar/AppBar'
 
-export const drawerWidth = 240
-
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         display: 'flex',
