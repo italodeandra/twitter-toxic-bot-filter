@@ -16,7 +16,7 @@ import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles'
 import { useMount } from 'react-use'
 import useFeedbackApi from '../../api/feedback/useFeedbackApi'
 import { Link } from 'react-router-dom'
-import useTitle from '../../hooks/useTitle'
+import useTitle from '../../common/hooks/useTitle'
 
 const customIcons: { [index: string]: { icon: React.ReactElement; label: string } } = {
     1: {

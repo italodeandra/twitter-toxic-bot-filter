@@ -1,5 +1,5 @@
 import React from 'react'
-import useTitle from '../../hooks/useTitle'
+import useTitle from '../../common/hooks/useTitle'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({

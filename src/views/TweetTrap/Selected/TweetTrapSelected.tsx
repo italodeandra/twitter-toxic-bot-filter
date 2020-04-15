@@ -46,7 +46,7 @@ import TweetTrapSelectedMuteByBotScoreDialog
     from './MuteDialogs/MuteByBotScoreDialog/TweetTrapSelectedMuteByBotScoreDialog'
 import TweetTrapSelectedMuteConfirmDialog from './MuteDialogs/MuteConfirmDialog/TweetTrapSelectedMuteConfirmDialog'
 import { useDeepCompareEffect } from 'react-use'
-import useTitle from '../../../hooks/useTitle'
+import useTitle from '../../../common/hooks/useTitle'
 
 const BIGINT_MAX = 9223372036854775807
 

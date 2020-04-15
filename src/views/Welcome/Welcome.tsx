@@ -3,7 +3,7 @@ import { Box, Button, Container, Link, Theme, Typography } from '@material-ui/co
 import { makeStyles } from '@material-ui/core/styles'
 import { PolicyRounded as PolicyRoundedIcon, Twitter as TwitterIcon } from '@material-ui/icons'
 import { useMount } from 'react-use'
-import useTitle from '../../hooks/useTitle'
+import useTitle from '../../common/hooks/useTitle'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

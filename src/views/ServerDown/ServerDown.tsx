@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import useTitle from '../../hooks/useTitle'
+import useTitle from '../../common/hooks/useTitle'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box, Button, Fade, Typography } from '@material-ui/core'
 import { PolicyRounded as PolicyRoundedIcon } from '@material-ui/icons'
