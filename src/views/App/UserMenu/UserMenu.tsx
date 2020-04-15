@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Box, Button, Divider, ListItemIcon, Menu, MenuItem, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import { removeUser } from '../../../../store/reducers/user/userActions'
-import { useUser } from '../../../../store/reducers/user/userReducer'
+import { removeUser } from '../../../store/reducers/user/userActions'
+import { useUser } from '../../../store/reducers/user/userReducer'
 import { ExitToApp as ExitToAppIcon } from '@material-ui/icons'
-import getInitials from '../../../../utils/getInitials'
+import getInitials from '../../../utils/getInitials'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {

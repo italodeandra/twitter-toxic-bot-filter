@@ -1,91 +1,29 @@
-import React, { FunctionComponent, ReactElement, ReactNode, useEffect } from 'react'
-import clsx from 'clsx'
-import { AppBar, Box, Button, CircularProgress, Fade, Toolbar, Typography, useScrollTrigger, } from '@material-ui/core'
+import React, { FunctionComponent, ReactNode, useEffect } from 'react'
+import { default as CAppBar } from '../../../common/components/App/AppBar/AppBar'
+import { Box, Button, CircularProgress, Fade } from '@material-ui/core'
+import UserMenu from '../UserMenu/UserMenu'
 import { Twitter as TwitterIcon } from '@material-ui/icons'
-import { makeStyles, Theme, useTheme } from '@material-ui/core/styles'
-import { drawerWidth } from '../App'
-import MenuButton from '../MenuButton/MenuButton'
-import { useUser } from '../../../store/reducers/user/userReducer'
-import { updateUser } from '../../../store/reducers/user/userActions'
-import UserMenu from './UserMenu/UserMenu'
-import useAuthApi from '../../../api/auth/useAuthApi'
 import config from '../../../config'
+import { updateUser } from '../../../store/reducers/user/userActions'
+import { useUser } from '../../../store/reducers/user/userReducer'
+import useAuthApi from '../../../api/auth/useAuthApi'
 import { useSnackbar } from 'notistack'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLocalStorage } from 'react-use'
-import useTitle from '../../../hooks/useTitle'
-
-const useStyles = makeStyles((theme: Theme) => ({
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        // boxShadow: theme.shadows[0],
-        transition: theme.transitions.create([ 'width', 'margin', 'box-shadow', 'background-color' ], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        color: theme.palette.primary.main,
-        backgroundColor: theme.palette.primary.contrastText
-
-    },
-    appBarShift: {
-        zIndex: theme.zIndex.drawer,
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create([ 'width', 'margin', 'box-shadow', 'background-color' ], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    hide: {
-        display: 'none',
-    },
-    title: {
-        fontSize: 17
-    },
-    userMenuButton: {
-        padding: 0,
-        width: 36,
-        minWidth: 36,
-        height: 36,
-        borderRadius: 18
-    }
-}))
-
-const ElevationScroll: FunctionComponent = ({ children }) => {
-    // const classes = useStyles()
-
-    const trigger = useScrollTrigger({
-        disableHysteresis: true,
-        threshold: 0,
-    })
-
-    return React.cloneElement(children as ReactElement, {
-        elevation: trigger ? 4 : 0,
-        // elevation: 0,
-        style: {
-            // backgroundColor: !trigger ? 'transparent' : undefined
-        }
-    })
-}
+import { useTheme } from '@material-ui/core/styles'
 
 interface Props {
-    isMobile: boolean
     open: boolean
     logo: ReactNode
     handleDrawerOpen: () => void
 }
 
-const AppAppBar: FunctionComponent<Props> = ({
-                                                 isMobile,
-                                                 open,
-                                                 logo,
-                                                 handleDrawerOpen,
-                                             }) => {
+const AppBar: FunctionComponent<Props> = ({
+                                              open,
+                                              logo,
+                                              handleDrawerOpen,
+                                          }) => {
     const theme = useTheme()
-    const classes = useStyles()
     const [ user, userDispatch ] = useUser()
     const isSignedIn = !!user
     const [ authStartState, { start: authStart } ] = useAuthApi()
@@ -96,7 +34,6 @@ const AppAppBar: FunctionComponent<Props> = ({
     const history = useHistory()
     const [ authPersistedState, setAuthPersistedState ] =
       useLocalStorage<{ oauthToken: string, oauthTokenSecret: string } | undefined>('AuthPersistedState', undefined)
-    const [ title ] = useTitle()
 
     function handleSignInClick() {
         authStart()
@@ -159,67 +96,44 @@ const AppAppBar: FunctionComponent<Props> = ({
     }, [ authFinishState.status ])
 
     return (
-      <ElevationScroll>
-          <AppBar
-            position="fixed"
-            className={clsx(classes.appBar, {
-                [classes.appBarShift]: isSignedIn && !isMobile && open,
-            })}
-          >
-              <Toolbar variant={!isMobile ? 'dense' : undefined}>
-                  <MenuButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    className={classes.menuButton}
-                    isMobile={isMobile}
-                    open={open}
-                    onClick={handleDrawerOpen}
-                    location="app-bar"
-                    isSignedIn={isSignedIn}
-                  />
+      <CAppBar
+        open={open}
+        logo={logo}
+        handleDrawerOpen={handleDrawerOpen}
+        appTitle={'Twitter Toxic-bot Filter'}
+        drawerShowing={isSignedIn}
+      >
+          <div style={{ flexGrow: 1 }} />
 
-                  {logo}
-
-                  {(title !== 'Twitter Toxic-bot Filter' || !isMobile) &&
-                  <Typography variant="h6" noWrap className={classes.title}>
-                      {title}
-                  </Typography>
-                  }
-
-                  <div style={{ flexGrow: 1 }} />
-
-                  <Box display="flex" alignItems="center">
-                      {isSignedIn
-                        ? (
-                          <UserMenu />
-                        ) : (<>
-                            {[ authStartState.status, authFinishState.status ].includes('loading') &&
-                            <Fade in timeout={{ enter: 1000 }}>
-                                <CircularProgress
-                                  color="inherit"
-                                  size={theme.spacing(3)}
-                                  style={{ marginRight: theme.spacing(2) }}
-                                />
-                            </Fade>
-                            }
-                            <Button
-                              id="sign-in-button"
-                              color="inherit"
-                              variant="outlined"
-                              startIcon={<TwitterIcon />}
-                              disableElevation
-                              onClick={handleSignInClick}
-                              disabled={[ authStartState.status, authFinishState.status ].includes('loading')}
-                            >Sign in
-                            </Button>
-                        </>)
-                      }
-                  </Box>
-              </Toolbar>
-          </AppBar>
-      </ElevationScroll>
+          <Box display="flex" alignItems="center">
+              {isSignedIn
+                ? (
+                  <UserMenu />
+                ) : (<>
+                    {[ authStartState.status, authFinishState.status ].includes('loading') &&
+                    <Fade in timeout={{ enter: 1000 }}>
+                        <CircularProgress
+                          color="inherit"
+                          size={theme.spacing(3)}
+                          style={{ marginRight: theme.spacing(2) }}
+                        />
+                    </Fade>
+                    }
+                    <Button
+                      id="sign-in-button"
+                      color="inherit"
+                      variant="outlined"
+                      startIcon={<TwitterIcon />}
+                      disableElevation
+                      onClick={handleSignInClick}
+                      disabled={[ authStartState.status, authFinishState.status ].includes('loading')}
+                    >Sign in
+                    </Button>
+                </>)
+              }
+          </Box>
+      </CAppBar>
     )
 }
 
-export default AppAppBar
+export default AppBar

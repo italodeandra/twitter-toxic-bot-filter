@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { Box, Button, Container, Theme, Typography } from '@material-ui/core'
+import { Box, Button, Container, Link, Theme, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { PolicyRounded as PolicyRoundedIcon, Twitter as TwitterIcon } from '@material-ui/icons'
 import { useMount } from 'react-use'
@@ -65,12 +65,12 @@ const Welcome = () => {
                       responds. In addition to clearing new profiles, @ with name and number with a lot of emoji and
                       some types of avatar.
                   </span> &mdash; Translated from Atila Iamarino (@oatila)&nbsp;
-                  <a
+                  <Link
                     style={{ whiteSpace: 'nowrap' }}
                     href="https://twitter.com/oatila/status/1243636812809109517"
                     target="_blank"
                     rel="noopener noreferrer"
-                  >March 27, 2020</a>
+                  >March 27, 2020</Link>
               </Typography>
               <Typography paragraph align="justify">
                   Then I began this adventure to solve his problem. Of course there was some existing options, but none

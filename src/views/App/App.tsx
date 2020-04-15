@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { createMuiTheme, makeStyles, Theme, ThemeProvider, useTheme } from '@material-ui/core/styles'
+import { createMuiTheme, makeStyles, Theme, ThemeProvider } from '@material-ui/core/styles'
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom'
 import Welcome from '../Welcome/Welcome'
 import { lightBlue } from '@material-ui/core/colors'
@@ -9,9 +9,8 @@ import {
     PolicyRounded as PolicyRoundedIcon,
     TrackChangesRounded as TrackChangesRoundedIcon
 } from '@material-ui/icons'
-import { useDeepCompareEffect, useLocalStorage, useMount } from 'react-use'
-import AppDrawer, { toolbarStyles } from './Drawer/AppDrawer'
-import AppAppBar from './AppBar/AppBar'
+import { useLocalStorage, useMount } from 'react-use'
+import Drawer, { toolbarStyles } from '../../common/components/App/Drawer/Drawer'
 import { useUser } from '../../store/reducers/user/userReducer'
 import Home from '../Home/Home'
 import TweetTrap from '../TweetTrap/TweetTrap'
@@ -25,6 +24,7 @@ import Terms from '../Terms/Terms'
 import Privacy from '../Privacy/Privacy'
 import ServerDown from '../ServerDown/ServerDown'
 import useHealthCheckApi from '../../api/healthCheck/useHealthCheckApi'
+import AppBar from './AppBar/AppBar'
 
 export const drawerWidth = 240
 
@@ -61,9 +61,7 @@ const menus = [
 ]
 
 function AppWithProviders() {
-    const theme = useTheme()
     const classes = useStyles()
-    const isMobile = useMediaQuery(theme.breakpoints.down('xs'), { noSsr: true })
     const [ open, setOpen ] = useLocalStorage<boolean>('NavigationDrawerOpen', false)
     const [ user, userDispatch ] = useUser()
     const isSignedIn = !!user
@@ -89,8 +87,9 @@ function AppWithProviders() {
             (socket as any).authenticated = authenticated
         })
     })
-    useDeepCompareEffect(() => {
+    useEffect(() => {
         socket.emit('auth', user)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ user ])
 
     const logo = useMemo(() => (
@@ -141,20 +140,19 @@ function AppWithProviders() {
       <div className={classes.root}>
 
           {!isServerDown ? <>
-              <AppAppBar
-                isMobile={isMobile}
+              <AppBar
                 open={open}
                 logo={logo}
                 handleDrawerOpen={handleDrawerOpen}
               />
-              <AppDrawer
-                isMobile={isMobile}
+              <Drawer
                 open={open}
                 logo={logo}
                 handleDrawerClose={handleDrawerClose}
                 handleDrawerOpen={handleDrawerOpen}
-                isSignedIn={isSignedIn}
+                show={isSignedIn}
                 menus={menus}
+                appTitle='Twitter Toxic-bot Filter'
               />
 
               <main className={classes.content}>
