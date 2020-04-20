@@ -4,7 +4,6 @@ import { useSharedHealthCheckApi } from '../../store/reducers/healthCheckApi/hea
 
 type AuthApi = [ State, () => void ]
 
-
 export default function useHealthCheckApi(): AuthApi {
     const [ state, dispatch ] = useSharedHealthCheckApi()
 
