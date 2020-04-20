@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useLocalStorage } from 'react-use'
 import { useTheme } from '@material-ui/core/styles'
+import { appTitle } from '../App'
 
 interface Props {
     open: boolean
@@ -100,7 +101,7 @@ const AppBar: FunctionComponent<Props> = ({
         open={open}
         logo={logo}
         handleDrawerOpen={handleDrawerOpen}
-        appTitle={'Twitter Toxic-bot Filter'}
+        appTitle={appTitle}
         drawerShowing={isSignedIn}
       >
           <div style={{ flexGrow: 1 }} />

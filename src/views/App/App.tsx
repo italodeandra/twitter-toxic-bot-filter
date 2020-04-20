@@ -58,6 +58,8 @@ const menus = [
     { title: 'Tweet trap', icon: <TrackChangesRoundedIcon />, url: '/tweet-trap' }
 ]
 
+export const appTitle = 'Twitter Toxic-bot Filter'
+
 function AppWithProviders() {
     const classes = useStyles()
     const [ open, setOpen ] = useLocalStorage<boolean>('NavigationDrawerOpen', false)
@@ -96,7 +98,7 @@ function AppWithProviders() {
         className={classes.logo}
       >
           <PolicyRoundedIcon
-            aria-label="twitter toxic-bot filter's logo"
+            aria-label={`${appTitle.toLowerCase()}'s logo`}
           />
       </Link>
     ), [ classes ])
@@ -150,7 +152,7 @@ function AppWithProviders() {
                 handleDrawerOpen={handleDrawerOpen}
                 show={isSignedIn}
                 menus={menus}
-                appTitle='Twitter Toxic-bot Filter'
+                appTitle={appTitle}
               />
 
               <main className={classes.content}>

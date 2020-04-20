@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { PolicyRounded as PolicyRoundedIcon, Twitter as TwitterIcon } from '@material-ui/icons'
 import { useMount } from 'react-use'
 import useTitle from '../../common/hooks/useTitle'
+import { appTitle } from '../App/App'
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const Welcome = () => {
-    useTitle('Twitter Toxic-bot Filter')
+    useTitle(appTitle)
     const classes = useStyles()
 
     const logo = useMemo(() => <PolicyRoundedIcon style={{ marginBottom: -7 }}

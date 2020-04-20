@@ -17,6 +17,7 @@ import { useMount } from 'react-use'
 import useFeedbackApi from '../../api/feedback/useFeedbackApi'
 import { Link } from 'react-router-dom'
 import useTitle from '../../common/hooks/useTitle'
+import { appTitle } from '../App/App'
 
 const customIcons: { [index: string]: { icon: React.ReactElement; label: string } } = {
     1: {
@@ -62,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 const Home = () => {
-    useTitle('Twitter Toxic-bot Filter')
+    useTitle(appTitle)
     const theme = useTheme()
     const classes = useStyles()
     const [ user ] = useUser()
